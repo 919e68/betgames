@@ -49,9 +49,6 @@ db.BetType.belongsTo(db.Game, {
 db.Draw.belongsTo(db.Game, {
   foreignKey: 'gameId'
 })
-db.Draw.belongsTo(db.GamePart, {
-  foreignKey: 'gamePartId'
-})
 db.Draw.hasMany(db.Bet, {
   foreignKey: 'drawNumber'
 })
@@ -76,9 +73,6 @@ db.GamePart.belongsTo(db.Game, {
 })
 
 db.GamePart.hasMany(db.Odd, {
-  foreignKey: 'gamePartId'
-})
-db.GamePart.hasMany(db.Draw, {
   foreignKey: 'gamePartId'
 })
 

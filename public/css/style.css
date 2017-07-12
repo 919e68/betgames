@@ -1,4 +1,9 @@
 @import '../streams/assets/main.ee8829e77cbd36629e5a.css';
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
 
 .games-navigation > ul.nav > li {
   width: 33.33%;

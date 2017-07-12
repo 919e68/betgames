@@ -14,7 +14,7 @@ module.exports = {
       id: {
         type: GraphQLID
       },
-      gameId: {
+      drawNumber: {
         type: GraphQLID
       },
       gamePartId: {
@@ -22,6 +22,9 @@ module.exports = {
       },
       outcomeId: {
         type: GraphQLID
+      },
+      odds: {
+        type: GraphQLFloat
       },
       createdAt: {
         type: GraphQLString

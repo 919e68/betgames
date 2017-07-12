@@ -13,7 +13,7 @@ module.exports = {
       id: {
         type: GraphQLID
       },
-      drawId: {
+      drawNumber: {
         type: GraphQLID
       },
       userId: {
@@ -37,7 +37,7 @@ module.exports = {
   Input: new GraphQLInputObjectType({
     name: 'BetInput',
     fields: {
-      drawId: {
+      drawNumber: {
         type: GraphQLString
       },
       userId: {

@@ -1,16 +1,21 @@
 const { 
   GraphQLObjectType,
   GraphQLInputObjectType,
-  GraphQLID, 
-  GraphQLString, 
+  GraphQLID,
+  GraphQLInt,
   GraphQLFloat,
-  GraphQLInt
+  GraphQLString,
+  GraphQLList
+
 } = require('graphql')
+
+const db = require('../../models/db')
+const Odd = require('./odd')
 
 module.exports = {
   Type: new GraphQLObjectType({
     name: 'Draw',
-    fields: {
+    fields: () => ({
       id: {
         type: GraphQLID
       },
@@ -27,7 +32,40 @@ module.exports = {
         type: GraphQLString
       },
       winningNumber: {
-        type: GraphQLInt
+        type: GraphQLString
+      },
+      winningSymbol: {
+        type: GraphQLString
+      },
+      odds: {
+        type: new GraphQLList(Odd.Type),
+        args: { 
+          gamePartId: { 
+            name: 'gamePartId', 
+            type: GraphQLInt
+          }
+        },
+        resolve: (draw, { gamePartId }) => {
+          return new Promise((resolve, reject) => {
+
+            let where = {
+              drawNumber: draw.drawNumber
+            }
+
+            if (gamePartId) {
+              where.gamePartId = gamePartId
+            }
+
+            db.Odd.findAll({
+              where: where,
+              logging: false
+            }).then(odds => {
+
+              resolve(odds)
+
+            })
+          })
+        }
       },
       createdAt: {
         type: GraphQLString
@@ -35,7 +73,7 @@ module.exports = {
       updatedAt: {
         type: GraphQLString
       }
-    }
+    })
   }),
 
   Input: new GraphQLInputObjectType({
