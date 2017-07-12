@@ -36,7 +36,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "service:war-of-bets": "nodemon services/war-of-bets.js",
+    "service:war": "nodemon services/war.js",
+    "service:poker": "nodemon services/poker.js",
     "test": "node test/index.js"
   }
 }

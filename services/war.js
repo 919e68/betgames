@@ -15,7 +15,7 @@ wss.broadcast = function broadcast(data) {
 }
 
 let spawn = process.spawn
-let warOfBets = spawn('phantomjs', ['services/war-of-bets-phantom.js'])
+let warOfBets = spawn('phantomjs', ['services/war-phantom.js'])
 
 
 warOfBets.stdout.on('data', function (data) {
