@@ -7,6 +7,13 @@ export default class BetOption extends Component {
     @props float odds
     @props boolean disabled
   */
+
+  constructor (props) {
+    super(props)
+
+    this._onClick = this._onClick.bind(this)
+  }
+
   _onClick () {
     if(this.props.disabled) {
       return
@@ -38,7 +45,7 @@ export default class BetOption extends Component {
 
   render() {
     return (
-      <a href="javascript:void(0)" className={"team list-group-item " + (this.props.disabled ? 'disabled' : 'enabled')} onClick={this.props._onClick}>
+      <a href="javascript:void(0)" className={"team list-group-item " + (this.props.disabled ? 'disabled' : 'enabled')} onClick={this._onClick}>
         <span className="fav glyphicon glyphicon-star-empty" data-toggle="tooltip" data-placement="top" title="" data-original-title="You are not logged in"></span>
         <span className="odd-name capitalized">{Translate(this.props.betName)}</span>
 

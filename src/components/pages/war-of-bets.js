@@ -37,15 +37,14 @@ class WarOfBets extends Component {
           id: 10
       }],
       gamePartId: null,
-      odds: {
-          
-      },
-      user: {
-        
-      }
+      odds: {},
+      user: {},
+      selectedOdds: null,
+      error: null
     }
 
     this._onChange = this._onChange.bind(this)
+    this.placeBet = this.placeBet.bind(this)
   }
 
   componentDidMount() {
@@ -61,6 +60,9 @@ class WarOfBets extends Component {
             self.setState({odds: Object.assign({}, data.data.odds)}, function(){
               console.log(' ODDS' ,self.state.odds)
             })
+
+            // RESET DATA 
+            self.setState({selectedOdds: null, betInput: 0})
         } else {
           self.setState({data: Object.assign({}, data) })
         }
@@ -98,6 +100,33 @@ class WarOfBets extends Component {
 
   placeBet() {
     // CLICK ON PLACE BET BUTTON / SUBMIT PLACE BET FORM
+    if(!this.state.selectedOdds && !this.state.betInput) {
+      this.setState({error: 'Please select an option, and your amount to bet'})
+      return
+    } else if(!this.state.betInput) {
+      this.setState({error: 'Please select an amount to bet'})
+      return
+    } else if (!this.state.selectedOdds) {
+      this.setState({error: 'Please select an option'})
+      return
+    }
+  }
+
+  renderSelectedOdds() {
+    let self = this
+    let { selectedOdds } = self.state
+
+    if(selectedOdds) {
+
+      return (
+        <div>
+          Betting for: 
+          <div className="well well-sm">
+            {selectedOdds.chosenOutcome}&nbsp;({selectedOdds.odds.odds})
+          </div>
+        </div>
+      )
+    }
   }
 
   render() {
@@ -125,24 +154,47 @@ class WarOfBets extends Component {
 
           <header className="capitalized">
             <h4>{Translate('Choose Betting Option')}</h4>
+            {JSON.stringify(this.state.selectedOdds)}
           </header>
           <BetOptions>
             <BetOption 
               loading={data.type == 'waiting'} 
               disabled={data.type == 'winner' || data.type == 'waiting' || odds.dealer == 'lost' } 
-              betName={Translate('Dealer Wins')} odds={odds.dealer}
+              betName={Translate('Dealer Wins')} 
+              odds={!odds.dealer ? null : odds.dealer.odds}
+              onClick={() => {
+                let bet = {
+                  odds: odds.dealer,
+                  chosenOutcome: 'Dealer Wins'
+                }
+                self.setState({selectedOdds: Object.assign({}, bet)})
+              }}
             />
             <BetOption 
               loading={data.type == 'waiting'} 
               disabled={data.type == 'winner' || data.type == 'waiting' || odds.player == 'lost' } 
               betName={Translate('Player Wins')} 
-              odds={this.state.odds.player} 
+              odds={!odds.player ? null : odds.player.odds} 
+              onClick={() => {
+                let bet = {
+                  odds: odds.player,
+                  chosenOutcome: 'Player Wins'
+                }
+                self.setState({selectedOdds: Object.assign({}, bet)})
+              }}
             />
             <BetOption 
               loading={data.type == 'waiting'} 
               disabled={data.type == 'winner' || data.type == 'waiting' || odds.war == 'lost' } 
               betName={Translate('War')} 
-              odds={this.state.odds.war} 
+              odds={!odds.war ? null : odds.war.odds} 
+              onClick={() => {
+                let bet = {
+                  odds: odds.war,
+                  chosenOutcome: 'War'
+                }
+                self.setState({selectedOdds: Object.assign({}, bet)})                
+              }}
             />
           </BetOptions>
 
@@ -150,6 +202,20 @@ class WarOfBets extends Component {
 
         <BetSlip>
           <BetSlipHeader title={Translate('Bet Slip')} />
+
+          {
+            this.state.error ?
+            <section className="place-bet-alerts">
+              <div className="alert alert-warning" id="message_block">
+                <span className="glyphicon glyphicon-exclamation-sign"></span> {this.state.error}
+              </div>
+            </section>
+            :
+            null
+          }  
+
+          { this.renderSelectedOdds() } 
+
           <section className="capitalized">
             {Translate('Amount')}
           </section>
@@ -166,7 +232,9 @@ class WarOfBets extends Component {
 
           <BetInput value={this.state.betInput} onChange={this._onChange} />
 
-          <PlaceBetButton onClick={() => {alert()}} disabled={this.state.betInput == ''} />
+          <p>Maximum Bet: $100.00</p>
+
+          <PlaceBetButton onClick={this.placeBet} disabled={!this.state.betInput || !this.state.gamePartId} />
           </BetSlip>
       </div>
     )
