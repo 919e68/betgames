@@ -2,8 +2,8 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('Bet', {
     id: {
       type: DataTypes.BIGINT,
-      allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     drawNumber: {
       type: DataTypes.BIGINT,

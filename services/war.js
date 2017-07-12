@@ -72,7 +72,8 @@ warOfBets.stdout.on('data', function (data) {
             where: {
               drawNumber: json.data.drawNumber,
               gamePartId: json.data.gamePartId
-            }
+            },
+            logging: false
           }).then(odds => {
 
             let oddsData = {}

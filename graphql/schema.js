@@ -5,6 +5,7 @@ const {
 
 const users = require('./data/users')
 const games = require('./data/games')
+const bets = require('./data/bets')
 
 module.exports = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -19,7 +20,8 @@ module.exports = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'Mutation',
     fields: {
-      login: users.Mutation.login
+      login: users.Mutation.login,
+      createBet: bets.Mutation.createBet
     }
   })
 
