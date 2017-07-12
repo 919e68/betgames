@@ -30,7 +30,7 @@ module.exports = {
         type: Outcome.Type,
         resolve: (odd) => {
           return new Promise((resolve, reject) => {
-            db.Outcome.findById(odd.outcomeId).then(outcome => {
+            db.Outcome.findById(odd.outcomeId, { logging: false }).then(outcome => {
               resolve(outcome)
             }).catch(err => {
               reject(err)

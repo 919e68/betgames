@@ -3,6 +3,7 @@ const {
   GraphQLID,
   GraphQLInt,
   GraphQLList,
+  GraphQLNonNull
   
 } = require('graphql')
 
@@ -14,7 +15,7 @@ module.exports = {
   Query: {
     latestDraw: {
       type: new GraphQLObjectType({
-        name: 'LatestResponse',
+        name: 'LatestDrawResponse',
         fields: {
           draw: {
             type: Draw.Type
@@ -51,9 +52,7 @@ module.exports = {
               ],
               logging: false
             }).then(draw => {
-              if (draw) {
-                resolve({ draw })
-              }
+              resolve({ draw })
             })
           } else {
             resolve({ errors })

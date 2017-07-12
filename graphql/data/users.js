@@ -25,25 +25,8 @@ module.exports = {
       resolve: (root, { data }, { session }) => {
         return new Promise((resolve, reject) => {
 
-          console.log(session)
-
-          if (req.session.user) {
-            resolve({ 
-              user: {
-                id: 1,
-                username: 'shet'
-              }
-            })
-          } else {
-            resolve({
-              errors: [
-                {
-                  key: 'shet',
-                  msg: 'settt'
-                }
-              ]
-            })
-          }
+          
+           
         })
       }
     },
@@ -52,23 +35,19 @@ module.exports = {
       type: User.Type,
       args: { 
         id: { 
-          name: 'id', 
+          name: 'id',
           type: GraphQLID
         }
       },
       resolve: (root, { id }, { session }) => {
-
-        console.log(session)
-
         return new Promise((resolve, reject) => {
           db.User.findOne({
             where: {
               id: id
-            }
+            },
+            logging: false
           }).then(user => {
-
             resolve(user)
-
           })
         })
       }

@@ -24,7 +24,7 @@ module.exports = {
         type: BetType.Type,
         resolve: (outcome) => {
           return new Promise((resolve, reject) => {
-            db.BetType.findById(outcome.betTypeId).then(betType => {
+            db.BetType.findById(outcome.betTypeId, { logging: false }).then(betType => {
               resolve(betType)
             }).catch(err => {
               reject(err)
