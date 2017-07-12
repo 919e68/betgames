@@ -92,7 +92,7 @@ warOfBets.stdout.on('data', function (data) {
 
               } else if (odds[i].outcomeId == 12) {
                 oddsData.war = {
-                  id: 12
+                  id: 12,
                   odds: odds[i].odds
                 }
               }
