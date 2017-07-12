@@ -6,6 +6,9 @@ const {
   GraphQLFloat 
 } = require('graphql')
 
+const db = require('../../models/db')
+const Game = require('./game')
+
 module.exports = {
   Type: new GraphQLObjectType({
     name: 'BetType',
@@ -15,6 +18,18 @@ module.exports = {
       },
       gameId: {
         type: GraphQLID
+      },
+      game: {
+        type: Game.Type,
+        resolve: (betType) => {
+          return new Promise((resolve, reject) => {
+            db.Game.findById(betType.gameId).then(game => {
+              resolve(game)
+            }).catch(err => {
+              reject(err)
+            })
+          })
+        }
       },
       name: {
         type: GraphQLString
