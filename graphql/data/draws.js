@@ -1,20 +1,63 @@
 const {
   GraphQLObjectType,
-  GraphQLList
+  GraphQLID,
+  GraphQLInt,
+  GraphQLList,
+  
 } = require('graphql')
 
 const db = require('../../models/db')
-const Game = require('../types/draw')
+const Error = require('../types/error')
+const Draw = require('../types/draw')
 
 module.exports = {
   Query: {
-    games: {
-      type: new GraphQLList(Game.Type),
-      resolve: () => {
+    latestDraw: {
+      type: new GraphQLObjectType({
+        name: 'LatestResponse',
+        fields: {
+          draw: {
+            type: Draw.Type
+          },
+          errors: {
+            type: new GraphQLList(Error.Type)
+          }
+        }
+      }),
+      args: { 
+        gameId: { 
+          name: 'gameId', 
+          type: GraphQLInt
+        }
+      },
+      resolve: (root, { gameId }) => {
         return new Promise((resolve, reject) => {
-          db.Game.findAll().then(games => {
-            resolve(games)
-          })
+          let errors = []
+
+          if (!gameId) {
+            errors.push({
+              key: 'gameId',
+              msg: 'game id is required'
+            })
+          }
+
+          if (errors.length == 0) {
+            db.Draw.findOne({
+              where: {
+                gameId: gameId
+              },
+              order: [
+                ['id', 'DESC']
+              ],
+              logging: false
+            }).then(draw => {
+              if (draw) {
+                resolve({ draw })
+              }
+            })
+          } else {
+            resolve({ errors })
+          } 
         })
       }
     }
