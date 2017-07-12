@@ -1,0 +1,8 @@
+{
+  "secret": "6398127928f1b2e",
+  "resave": false,
+  "saveUninitialized": true,
+  "cookie": { 
+    "secure": true
+  }
+}

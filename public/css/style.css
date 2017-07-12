@@ -1,0 +1,10 @@
+@import '../streams/assets/main.ee8829e77cbd36629e5a.css';
+
+.games-navigation > ul.nav > li {
+  width: 33.33%;
+}
+
+.games-navigation>ul .lottery-name {
+  line-height: 40px;
+  text-transform: capitalize;
+}

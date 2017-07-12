@@ -1,0 +1,106 @@
+{
+  "balance": {
+    "en": "balance",
+    "ko": "보유머니"
+  },
+  "bet on poker": {
+    "en": "bet on poker",
+    "ko": "배당 포커"
+  },
+  "baccarat": {
+    "en": "baccarat",
+    "ko": "배당 바카라"
+  },
+  "war of bets": {
+    "en": "war of bets",
+    "ko": "1:1 벳"
+  },
+  "bet slip": {
+    "en": "bet slip",
+    "ko": "베팅슬립"
+  },
+  "your bet slip is empty. please choose betting option from a list": {
+    "en": "your bet slip is empty. please choose betting option from a list",
+    "ko": "현재 배팅슬립 이 비어 있습니다. 베팅종류를 선택하세요"
+  },
+  "amount": {
+    "en": "amount",
+    "ko": "베팅금액"
+  },
+  "place bet": {
+    "en": "place bet",
+    "ko": "베팅 하기"
+  },
+  "recent bets": {
+    "en": "recent bets",
+    "ko": "최근 베팅내역"
+  },
+  "hands": {
+    "en": "hands",
+    "ko": "플레이어 (오른쪽부터 1,2,3,4,5,6 순 입니다)"
+  },
+  "hand 1 wins": {
+    "en": "hand 1 wins",
+    "ko": "플레이어 1 승리"
+  },
+  "hand 2 wins": {
+    "en": "hand 2 wins",
+    "ko": "플레이어 2 승리"
+  },
+  "hand 3 wins": {
+    "en": "hand 3 wins",
+    "ko": "플레이어 3 승리"
+  },
+  "hand 4 wins": {
+    "en": "hand 4 wins",
+    "ko": "플레이어 4 승리"
+  },
+  "hand 5 wins": {
+    "en": "hand 5 wins",
+    "ko": "플레이어 5 승리"
+  },
+  "hand 6 wins": {
+    "en": "hand 6 wins",
+    "ko": "플레이어 6 승리"
+  },
+  "primary bets": {
+    "en": "primary bets",
+    "ko": "우선 베팅"
+  },
+  "player card": {
+    "en": "player card",
+    "ko": "플레이어 카드"
+  },
+  "banker card": {
+    "en": "banker card",
+    "ko": "뱅커 카드"
+  },
+  "main bets": {
+    "en": "main bets",
+    "ko": "메인 베팅"
+  },
+  "dealer wins": {
+    "en": "dealer wins",
+    "ko": "딜러 승리"
+  },
+  "player wins": {
+    "en": "player wins",
+    "ko": "플레이어 승리"
+  },
+  "war": {
+    "en": "war",
+    "ko": "워"
+  },
+  "won": {
+    "en": "won",
+    "ko": "승"
+  },
+  "lost": {
+    "en": "lost",
+    "ko": "패"
+  },
+  "choose betting option": {
+    "en": "choose betting option",
+    "ko": "배팅 종류를 선택해 주세요"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "development": {
+    "username": "sa",
+    "password": "ABC12abc",
+    "database": "BetGamesTV",
+    "host": "127.0.0.1",
+    "dialect": "mssql",
+    "dialectOptions": {
+      "requestTimeout": 600000
+    },
+    "pool":{
+      "maxConnections": 40,
+      "minConnections": 1,
+      "maxIdleTime": 3600000,
+      "acquire": 3600000
+    }
+  }
+}
