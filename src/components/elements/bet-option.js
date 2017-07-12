@@ -15,7 +15,7 @@ export default class BetOption extends Component {
   }
 
   _onClick () {
-    if(this.props.disabled) {
+    if(this.props.disabled || !this.props.odds) {
       return
     }
 
@@ -35,9 +35,9 @@ export default class BetOption extends Component {
       return (
         <span className="badge">{
           this.props.odds ?
-            typeof this.props.odds == 'string' ? this.props.odds : this.props.odds.toFixed(2)
+            this.props.odds.toFixed(2)
             :
-            ''
+            'lost'
         }</span>
       )
     }
@@ -45,7 +45,7 @@ export default class BetOption extends Component {
 
   render() {
     return (
-      <a href="javascript:void(0)" className={"team list-group-item " + (this.props.disabled ? 'disabled' : 'enabled')} onClick={this._onClick}>
+      <a href="javascript:void(0)" className={"team list-group-item " + (this.props.disabled || !this.props.odds ? 'disabled' : 'enabled')} onClick={this._onClick}>
         <span className="fav glyphicon glyphicon-star-empty" data-toggle="tooltip" data-placement="top" title="" data-original-title="You are not logged in"></span>
         <span className="odd-name capitalized">{Translate(this.props.betName)}</span>
 

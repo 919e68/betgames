@@ -37,10 +37,12 @@ class WarOfBets extends Component {
           id: 10
       }],
       gamePartId: null,
+      drawNumber: null,
       odds: {},
       user: {},
       selectedOdds: null,
-      error: null
+      error: null,
+      placingBet: false
     }
 
     this._onChange = this._onChange.bind(this)
@@ -56,7 +58,7 @@ class WarOfBets extends Component {
         console.log(data)
 
         if(data.type == 'create') {
-            self.setState({gamePartId: data.data.gamePartId})
+            self.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber})
             self.setState({odds: Object.assign({}, data.data.odds)}, function(){
               console.log(' ODDS' ,self.state.odds)
             })
@@ -99,6 +101,8 @@ class WarOfBets extends Component {
   }
 
   placeBet() {
+    let self = this
+
     // CLICK ON PLACE BET BUTTON / SUBMIT PLACE BET FORM
     if(!this.state.selectedOdds && !this.state.betInput) {
       this.setState({error: 'Please select an option, and your amount to bet'})
@@ -110,6 +114,35 @@ class WarOfBets extends Component {
       this.setState({error: 'Please select an option'})
       return
     }
+
+    self.setState({placingBet: true})
+    axios.post('http://localhost:3000/graphql', {
+      query: `
+        mutation {
+          createBet(data: {
+            drawNumber: "${self.state.drawNumber}",
+            userId: "1",
+            oddId: "${self.state.selectedOdds.odds.id}",
+            amount: ${self.state.betInput}
+          }) 
+          {
+            bet {
+              id
+            }
+            errors {
+              key
+              msg
+            }
+          }
+        }
+      `
+    }).then(response => {
+      console.log('PLACE BET RESPONSE', response)
+      self.setState({
+        placingBet: false, 
+        user: Object.assign({}, self.state.user, {currentBalance: self.state.user.currentBalance - self.state.betInput})
+      })
+    })
   }
 
   renderSelectedOdds() {
@@ -234,7 +267,7 @@ class WarOfBets extends Component {
 
           <p>Maximum Bet: $100.00</p>
 
-          <PlaceBetButton onClick={this.placeBet} disabled={!this.state.betInput || !this.state.gamePartId} />
+          <PlaceBetButton onClick={this.placeBet} disabled={!this.state.betInput || !this.state.gamePartId || this.state.placingBet} />
           </BetSlip>
       </div>
     )
