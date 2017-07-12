@@ -1,6 +1,6 @@
 const process = require('child_process')
 const zlib = require('zlib')
-const db = require('../models/index')
+const db = require('../models/db')
 const WebSocket = require('ws')
  
 const wss = new WebSocket.Server({ port: 7000 })

@@ -8,3 +8,13 @@
   line-height: 40px;
   text-transform: capitalize;
 }
+
+#bet-games-stream {
+  width: 100%;
+  height: 422px;
+  border: none;
+}
+
+.capitalized {
+  text-transform: capitalize;
+}

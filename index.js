@@ -1,11 +1,12 @@
 const path = require('path')
 const config = require('./config/server')
 const express = require('express')
+const session = require('express-session')
 const bodyParser = require('body-parser')
 const router = express.Router()
 
 const graphQLHTTP = require('express-graphql')
-const session = require('express-session')
+
 const cors = require('cors')
 const sessionConfig = require('./config/session')
 
@@ -26,12 +27,14 @@ app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
 
-app.use('/', routes)
-app.use('/graphql', graphQLHTTP( req => ({ 
+app.use('/graphql', graphQLHTTP(req => ({ 
   schema: schema, 
   pretty: true, 
-  graphiql: true
+  graphiql: true,
+  rootValue: req.session
 })))
+
+app.use('/', routes)
 
 app.listen(PORT, () => {
   console.log(`app started http://localhost:${PORT}`)

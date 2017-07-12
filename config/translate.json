@@ -19,8 +19,8 @@
     "en": "bet slip",
     "ko": "베팅슬립"
   },
-  "your bet slip is empty. please choose betting option from a list": {
-    "en": "your bet slip is empty. please choose betting option from a list",
+  "your bet slip is empty. please choose betting option from a list.": {
+    "en": "your bet slip is empty. please choose betting option from a list.",
     "ko": "현재 배팅슬립 이 비어 있습니다. 베팅종류를 선택하세요"
   },
   "amount": {
@@ -99,8 +99,24 @@
     "en": "lost",
     "ko": "패"
   },
-  "choose betting option": {
-    "en": "choose betting option",
-    "ko": "배팅 종류를 선택해 주세요"
+  "player": {
+    "en": "player",
+    "ko": "플레이어"
+  },
+  "banker": {
+    "en": "banker",
+    "ko": "뱅커"
+  },
+  "tie": {
+    "en": "tie",
+    "ko": "타이"
+  },
+  "please wait, while the cards will be dealt": {
+    "en": "please wait, while the cards will be dealt",
+    "ko": "카드가 처리되는 동안 잠시 기다려주십시오."
+  },
+  "place your bets": {
+    "en": "place your bets",
+    "ko": "베팅"
   }
 }

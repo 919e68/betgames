@@ -6,6 +6,7 @@
   "author": "red",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.16.2",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-preset-env": "^1.6.0",
@@ -37,6 +38,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "service:war-of-bets": "nodemon services/war-of-bets.js",
+    "translate": "node ./scripts/translate",
     "test": "node test/index.js"
   }
 }
