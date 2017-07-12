@@ -171,7 +171,7 @@ class WarOfBets extends Component {
     return (
       <div>
         <Navbar user={this.state.user} />
-        <GameMenu />
+        <GameMenu  activeGame="war"/>
         <Stream url="http://localhost:3000/streams/war.html" />
 
         <BetOptionsContainer>

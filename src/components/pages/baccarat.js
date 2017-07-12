@@ -85,7 +85,7 @@ class Baccarat extends Component {
     return (
       <div>
         <Navbar user={this.state.user} />
-        <GameMenu />
+        <GameMenu activeGame="baccarat" />
         <Stream url="http://localhost:3000/streams/baccarat.html" />
 
         <BetOptionsContainer>
