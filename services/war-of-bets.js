@@ -67,17 +67,56 @@ warOfBets.stdout.on('data', function (data) {
           logging: false
         }).then(data => {
 
-          console.log(`success inserting (${data.length}) odds for draw (${json.data.drawNumber}) game part (${json.data.gamePartId})`)
-          wss.broadcast(JSON.stringify(json))
+          
+          db.Odd.findAll({
+            where: {
+              drawNumber: json.data.drawNumber,
+              gamePartId: json.data.gamePartId
+            }
+          }).then(odds => {
 
+            let oddsData = {}
+
+            for (let i = 0; i < odds.length; i++) {
+              if (odds[i].outcomeId == 10) {
+                oddsData.dealer = {
+                  id: 10,
+                  odds: odds[i].odds
+                }
+
+              } else if (odds[i].outcomeId == 11) {
+                oddsData.player = {
+                  id: 11,
+                  odds: odds[i].odds
+                }
+
+              } else if (odds[i].outcomeId == 12) {
+                oddsData.war = {
+                  id: 12
+                  odds: odds[i].odds
+                }
+              }
+            }
+
+            console.log(`success inserting (${data.length}) odds for draw (${json.data.drawNumber}) game part (${json.data.gamePartId})`)
+
+            wss.broadcast(JSON.stringify({
+              type: 'create',
+              table: 'odd',
+              data: {
+                drawNumber: json.data.drawNumber,
+                gamePartId: json.data.gamePartId,
+                odds: oddsData
+              }
+            }))
+
+          })
 
         }).catch(err => {
 
           console.log(err)
 
         })
-          
-
       }
 
 

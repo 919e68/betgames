@@ -9,33 +9,9 @@ page.onConsoleMessage = function(msg) {
   console.log(msg)
 }
 
-
-
 if (address) {
   page.open(address, function(status) {
     page.evaluate(function() {
-
-      var current = {
-        msg: null,
-        drawNumber: null,
-        betTypeId: null,
-        odds: {
-          dealer: null,
-          player: null,
-          war: null
-        }
-      }
-
-      var last = {
-        msg: null,
-        drawNumber: null,
-        betTypeId: null,
-        odds: {
-          dealer: null,
-          player: null,
-          war: null
-        }
-      }
 
       var Cards = {
         '2': 2,
