@@ -142,7 +142,8 @@ class WarOfBets extends Component {
       console.log('PLACE BET RESPONSE', response)
       self.setState({
         placingBet: false, 
-        user: Object.assign({}, self.state.user, {currentBalance: self.state.user.currentBalance - self.state.betInput})
+        user: Object.assign({}, self.state.user, {currentBalance: self.state.user.currentBalance - self.state.betInput}),
+        error: null
       })
     })
   }
@@ -171,7 +172,7 @@ class WarOfBets extends Component {
     return (
       <div>
         <Navbar user={this.state.user} />
-        <GameMenu  activeGame="war"/>
+        <GameMenu activeGame="war"/>
         <Stream url="http://localhost:3000/streams/war.html" />
 
         <BetOptionsContainer>
