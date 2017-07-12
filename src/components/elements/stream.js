@@ -9,7 +9,7 @@ class Stream extends Component {
   render() {
     return (
       <div>
-        <iframe src={this.props.url} scrolling='no'></iframe>
+        <iframe src={this.props.url} scrolling='no' id="bet-games-stream"></iframe>
       </div>
     )
   }

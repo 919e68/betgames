@@ -3,7 +3,7 @@ import {
   Link
 } from 'react-router-dom'
 
-import GameMenu from './elements/game-menu'
+import GameMenu from './blocks/game-menu'
 
 class Main extends Component {
   render() {

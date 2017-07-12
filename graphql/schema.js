@@ -11,6 +11,7 @@ module.exports = new GraphQLSchema({
     name: 'Query',
     fields: {
       auth: users.Query.auth,
+      user: users.Query.user,
       games: games.Query.games
     }
   }),

@@ -33,7 +33,7 @@ warOfBets.stdout.on('data', function (data) {
 
         db.Draw.create({
           drawNumber: json.data.drawNumber,
-          gameId: 3
+          gameId: 1
         }, {
           logging: false
         }).then(draw => {

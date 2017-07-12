@@ -1,6 +1,7 @@
 const {
   GraphQLObjectType,
-  GraphQLList
+  GraphQLList,
+  GraphQLID
 } = require('graphql')
 
 const db = require('../../models/db')
@@ -21,9 +22,11 @@ module.exports = {
           }
         }
       }),
-      resolve: (root, { data }, req) => {
+      resolve: (root, { data }, { session }) => {
         return new Promise((resolve, reject) => {
-          console.log(req.session.user)
+
+          console.log(session)
+
           if (req.session.user) {
             resolve({ 
               user: {
@@ -41,6 +44,32 @@ module.exports = {
               ]
             })
           }
+        })
+      }
+    },
+
+    user: {
+      type: User.Type,
+      args: { 
+        id: { 
+          name: 'id', 
+          type: GraphQLID
+        }
+      },
+      resolve: (root, { id }, { session }) => {
+
+        console.log(session)
+
+        return new Promise((resolve, reject) => {
+          db.User.findOne({
+            where: {
+              id: id
+            }
+          }).then(user => {
+
+            resolve(user)
+
+          })
         })
       }
     }

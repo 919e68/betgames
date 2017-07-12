@@ -6,6 +6,7 @@
   "author": "red",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.16.2",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-preset-env": "^1.6.0",
@@ -38,6 +39,7 @@
     "dev": "nodemon index.js",
     "service:war": "nodemon services/war.js",
     "service:poker": "nodemon services/poker.js",
+    "translate": "node ./scripts/translate",
     "test": "node test/index.js"
   }
 }

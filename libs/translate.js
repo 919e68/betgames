@@ -17,5 +17,7 @@ module.exports = function(word, language) {
   if (word in Translate) {
     let translated = Translate[word][language] ? Translate[word][language] : wordInital
     return translated
+  } else {
+    return wordInital
   }
 }
