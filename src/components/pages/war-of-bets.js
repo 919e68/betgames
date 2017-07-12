@@ -180,7 +180,7 @@ class WarOfBets extends Component {
             {
               this.state.gameParts.map( (gamePart, index) => {
                 return (
-                  <GamePart key={index} title={gamePart.title} width={self.state.gamePartId = gamePart.id || index == 0 ? 100 : 0} length={self.state.gameParts.length} />
+                  <GamePart key={index} title={gamePart.title} width={self.state.gamePartId == gamePart.id || index == 0 ? 100 : 0} length={self.state.gameParts.length} />
                 )
               })
             }
