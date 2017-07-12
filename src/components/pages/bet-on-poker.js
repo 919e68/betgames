@@ -91,7 +91,7 @@ class BetOnPoker extends Component {
     return (
       <div>
         <Navbar user={this.state.user} />
-        <GameMenu />
+        <GameMenu activeGame="poker" />
         <Stream url="http://localhost:3000/streams/poker.html" />
 
         <BetOptionsContainer>
