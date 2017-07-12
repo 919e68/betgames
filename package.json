@@ -1,7 +1,7 @@
 {
-  "name": "bet-games",
+  "name": "betgames",
   "version": "1.0.0",
-  "description": "",
+  "description": "betting app",
   "main": "index.js",
   "author": "red",
   "license": "ISC",
