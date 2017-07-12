@@ -29,18 +29,10 @@ module.exports = {
         type: Odd.Type,
         resolve: (bet) => {
           return new Promise((resolve, reject) => {
-            db.Odd.findOne({
-              where: {
-                id: bet.oddId
-              }
-            }).then(odd => {
-
+            db.Odd.findById(bet.oddId).then(odd => {
               resolve(odd)
-
             }).catch(err => {
-
               reject(err)
-
             })
           })
         }

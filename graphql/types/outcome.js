@@ -7,6 +7,9 @@ const {
   GraphQLInt
 } = require('graphql')
 
+const db = require('../../models/db')
+const BetType = require('./bet-type')
+
 module.exports = {
   Type: new GraphQLObjectType({
     name: 'Outcome',
@@ -16,6 +19,16 @@ module.exports = {
       },
       betTypeId: {
         type: GraphQLID
+      },
+      betType: {
+        type: BetType.Type,
+        resolve: (outcome) => {
+          db.BetType.findById(outcome.betTypeId).then(betType => {
+            resolve(betType)
+          }).catch(err => {
+            reject(err)
+          })
+        }
       },
       name: {
         type: GraphQLString

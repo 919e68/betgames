@@ -7,10 +7,13 @@ const {
   GraphQLInt
 } = require('graphql')
 
+const db = require('../../models/db')
+const Outcome = require('./outcome')
+
 module.exports = {
   Type: new GraphQLObjectType({
     name: 'Odd',
-    fields: {
+    fields: () => ({
       id: {
         type: GraphQLID
       },
@@ -23,6 +26,18 @@ module.exports = {
       outcomeId: {
         type: GraphQLID
       },
+      outcome: {
+        type: Outcome.Type,
+        resolve: (odd) => {
+          return new Promise((resolve, reject) => {
+            db.Outcome.findById(odd.outcomeId).then(outcome => {
+              resolve(outcome)
+            }).catch(err => {
+              reject(err)
+            })
+          })
+        }
+      },
       odds: {
         type: GraphQLFloat
       },
@@ -32,7 +47,7 @@ module.exports = {
       updatedAt: {
         type: GraphQLString
       }
-    }
+    })
   }),
 
   Input: new GraphQLInputObjectType({
