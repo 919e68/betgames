@@ -60,9 +60,39 @@ module.exports = {
               where: where,
               logging: false
             }).then(odds => {
-
               resolve(odds)
+            })
+          })
+        }
+      },
+      latestOdds: {
+        type: new GraphQLList(Odd.Type),
+        resolve: (draw) => {
+          return new Promise((resolve, reject) => {
+            db.sequelize.query('SELECT MAX(gamePartId) as gamePartId FROM Odds WHERE drawNumber = :drawNumber', { 
+              replacements: {
+                drawNumber: draw.drawNumber
+              },
+              type: db.sequelize.QueryTypes.SELECT,
+              logging: false
+            }).then(data => {
+              if (data.length > 0) {
+                db.Odd.findAll({
+                  where: {
+                    drawNumber: draw.drawNumber,
+                    gamePartId: data[0].gamePartId
+                  },
+                  logging: false
+                }).then(odds => {
+                  resolve(odds)
 
+                }).catch(err => {
+                  reject(err)
+                })
+
+              } else {
+                resolve(null)
+              }
             })
           })
         }

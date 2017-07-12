@@ -4,7 +4,6 @@ const db = require('../models/db')
 
 router.get('*', (req, res) => {
   req.session.userId = 1
-  console.log(req.session)
   res.render('layout/main')
 })
 
