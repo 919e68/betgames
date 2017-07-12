@@ -25,6 +25,16 @@ export default class BetOption extends Component {
   renderBadge() {
     let self = this
     
+    if(this.props.showingWinner) {
+      return (
+        <span className="badge">{
+          <span className={this.props.winner ? 'won': 'lost'}>
+            {this.props.winner ? 'won' : 'lost'}
+          </span>
+        }</span>
+      )
+    }
+
     if(this.props.loading) {
       return (
         <span className="badge">{
@@ -45,7 +55,9 @@ export default class BetOption extends Component {
 
   render() {
     return (
-      <a href="javascript:void(0)" className={"team list-group-item " + (this.props.disabled || !this.props.odds ? 'disabled' : 'enabled')} onClick={this._onClick}>
+      <a href="javascript:void(0)" 
+        className={"team list-group-item " + (this.props.disabled || !this.props.odds ? 'disabled ' : 'enabled ') + (this.props.active ? 'active' : '')} 
+        onClick={this._onClick}>
         <span className="fav glyphicon glyphicon-star-empty" data-toggle="tooltip" data-placement="top" title="" data-original-title="You are not logged in"></span>
         <span className="odd-name capitalized">{Translate(this.props.betName)}</span>
 
