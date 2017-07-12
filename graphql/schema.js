@@ -7,6 +7,7 @@ const users = require('./data/users')
 const games = require('./data/games')
 const bets = require('./data/bets')
 const draws = require('./data/draws')
+const odds = require('./data/odds')
 
 module.exports = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -16,7 +17,9 @@ module.exports = new GraphQLSchema({
       user: users.Query.user,
       games: games.Query.games,
       latestDraw: draws.Query.latestDraw,
-      recentBets: bets.Query.recentBets
+      recentBets: bets.Query.recentBets,
+
+      odds: odds.Query.odds
     }
   }),
 

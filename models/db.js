@@ -29,7 +29,26 @@ Object.keys(db).forEach(function(modelName) {
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
-// Bet associations
+// // Game associations
+db.Game.hasMany(db.GamePart, {
+  foreignKey: 'gameId'
+})
+db.Game.hasMany(db.BetType, {
+  foreignKey: 'gameId'
+})
+db.Game.hasMany(db.Draw, {
+  foreignKey: 'gameId'
+})
+
+// // GamePart associations
+db.GamePart.belongsTo(db.Game, {
+  foreignKey: 'gameId'
+})
+db.GamePart.hasMany(db.Odd, {
+  foreignKey: 'gamePartId'
+})
+
+// // Bet associations
 db.Bet.belongsTo(db.Draw, {
   foreignKey: 'drawNumber'
 })
@@ -40,12 +59,15 @@ db.Bet.belongsTo(db.Odd, {
   foreignKey: 'oddId'
 })
 
-// BetType associations
+// // BetType associations
 db.BetType.belongsTo(db.Game, {
   foreignKey: 'gameId'
 })
+db.BetType.hasMany(db.Outcome, {
+  foreignKey: 'betTypeId'
+})
 
-// Draw associations
+// // Draw associations
 db.Draw.belongsTo(db.Game, {
   foreignKey: 'gameId'
 })
@@ -56,27 +78,9 @@ db.Draw.hasMany(db.Odd, {
   foreignKey: 'drawNumber'
 })
 
-// Game associations
-db.Game.hasMany(db.BetType, {
-  foreignKey: 'gameId'
-})
-db.Game.hasMany(db.GamePart, {
-  foreignKey: 'gameId'
-})
-db.Game.hasMany(db.Draw, {
-  foreignKey: 'gameId'
-})
 
-// GamePart associations
-db.GamePart.belongsTo(db.Game, {
-  foreignKey: 'gameId'
-})
 
-db.GamePart.hasMany(db.Odd, {
-  foreignKey: 'gamePartId'
-})
-
-// Odd associations
+// // Odd associations
 db.Odd.belongsTo(db.Draw, {
   foreignKey: 'drawNumber'
 })
@@ -86,23 +90,19 @@ db.Odd.belongsTo(db.GamePart, {
 db.Odd.belongsTo(db.Outcome, {
   foreignKey: 'outcomeId'
 })
-
-
 db.Odd.hasMany(db.Bet, {
   foreignKey: 'oddId'
 })
 
-// Outcome associations
+// // Outcome associations
 db.Outcome.belongsTo(db.BetType, {
-  foreignKey: 'outcomeId'
+  foreignKey: 'betTypeId'
 })
-
 db.Outcome.hasMany(db.Odd, {
   foreignKey: 'outcomeId'
 })
 
-
-// User associations
+// // User associations
 db.User.hasMany(db.Bet, {
   foreignKey: 'userId'
 })

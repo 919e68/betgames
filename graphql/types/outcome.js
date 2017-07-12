@@ -13,7 +13,7 @@ const BetType = require('./bet-type')
 module.exports = {
   Type: new GraphQLObjectType({
     name: 'Outcome',
-    fields: {
+    fields: () => ({
       id: {
         type: GraphQLID
       },
@@ -23,10 +23,12 @@ module.exports = {
       betType: {
         type: BetType.Type,
         resolve: (outcome) => {
-          db.BetType.findById(outcome.betTypeId).then(betType => {
-            resolve(betType)
-          }).catch(err => {
-            reject(err)
+          return new Promise((resolve, reject) => {
+            db.BetType.findById(outcome.betTypeId).then(betType => {
+              resolve(betType)
+            }).catch(err => {
+              reject(err)
+            })
           })
         }
       },
@@ -42,7 +44,7 @@ module.exports = {
       updatedAt: {
         type: GraphQLString
       }
-    }
+    })
   }),
 
   Input: new GraphQLInputObjectType({
