@@ -1,7 +1,8 @@
 const {
   GraphQLObjectType,
-  GraphQLList,
-  GraphQLID
+  GraphQLID,
+  GraphQLInt,
+  GraphQLList
 } = require('graphql')
 
 const db = require('../../models/db')
@@ -9,6 +10,46 @@ const Error = require('../types/error')
 const Bet = require('../types/bet')
 
 module.exports = {
+  Query: {
+    recentBets: {
+      type: new GraphQLList(Bet.Type),
+      args: { 
+        userId: { 
+          name: 'userId', 
+          type: GraphQLInt
+        }
+      },
+      resolve: (root, { userId }) => {
+        return new Promise((resolve, reject) => {
+          let errors = []
+
+          if (!userId)
+            reject('userId required')
+
+          db.Bet.findAll({
+            where: {
+              userId: userId
+            },
+            order: [
+              ['updatedAt', 'DESC']
+            ],
+            limit: 10,
+            logging: false
+          }).then(bets => {
+
+            resolve(bets)
+    
+          }).catch(err => {
+
+            reject(err)
+
+          })
+
+        })
+      }
+    }
+  },
+
 
   Mutation: {
     createBet: {
@@ -58,17 +99,23 @@ module.exports = {
             })
           }
 
-
           if (errors.length == 0) {
             db.Bet.create(data, { logging: false }).then(bet => {
               if (bet) {
-                resolve({ bet, errors })
+                db.User.find({
+                  where: {
+                    id: data.userId
+                  }
+                }).then(user => {
+                  user.update({ currentBalance: user.currentBalance - data.amount })
+                  resolve({ bet, errors })
+                }).catch(err => {
+                  reject(err)
+                })
               }
             }).catch(err => {
               console.log(err)
-              
             })
-
           } else {
             resolve({ errors })
           }

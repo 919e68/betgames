@@ -15,8 +15,8 @@ module.exports = new GraphQLSchema({
       auth: users.Query.auth,
       user: users.Query.user,
       games: games.Query.games,
-
-      latestDraw: draws.Query.latestDraw
+      latestDraw: draws.Query.latestDraw,
+      recentBets: bets.Query.recentBets
     }
   }),
 

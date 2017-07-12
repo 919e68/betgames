@@ -6,10 +6,13 @@ const {
   GraphQLFloat 
 } = require('graphql')
 
+const db = require('../../models/db')
+const Odd = require('./odd')
+
 module.exports = {
   Type: new GraphQLObjectType({
     name: 'Bet',
-    fields: {
+    fields: () => ({
       id: {
         type: GraphQLID
       },
@@ -22,6 +25,26 @@ module.exports = {
       oddId: {
         type: GraphQLID
       },
+      odd: {
+        type: Odd.Type,
+        resolve: (bet) => {
+          return new Promise((resolve, reject) => {
+            db.Odd.findOne({
+              where: {
+                id: bet.oddId
+              }
+            }).then(odd => {
+
+              resolve(odd)
+
+            }).catch(err => {
+
+              reject(err)
+
+            })
+          })
+        }
+      },
       amount: {
         type: GraphQLFloat
       },
@@ -31,7 +54,7 @@ module.exports = {
       updatedAt: {
         type: GraphQLString
       }
-    }
+    })
   }),
 
   Input: new GraphQLInputObjectType({
