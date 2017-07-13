@@ -17,9 +17,13 @@ module.exports = {
         userId: { 
           name: 'userId', 
           type: GraphQLInt
+        },
+        gameId: {
+          name: 'gameId',
+          type: GraphQLInt
         }
       },
-      resolve: (root, { userId }) => {
+      resolve: (root, { userId, gameId }) => {
         return new Promise((resolve, reject) => {
           let errors = []
 
@@ -27,6 +31,7 @@ module.exports = {
             reject('userId required')
 
           db.Bet.findAll({
+            
             where: {
               userId: userId
             },
@@ -34,7 +39,7 @@ module.exports = {
               ['updatedAt', 'DESC']
             ],
             limit: 10,
-            logging: false
+            // logging: false
           }).then(bets => {
 
             resolve(bets)

@@ -43,7 +43,8 @@ class WarOfBets extends Component {
       user: {},
       selectedOdds: null,
       error: null,
-      placingBet: false
+      placingBet: false,
+      hasBet: false
     }
 
     this._onChange = this._onChange.bind(this)
@@ -80,7 +81,7 @@ class WarOfBets extends Component {
           })
 
           // RESET DATA 
-          this.setState({selectedOdds: null, betInput: 0})
+          this.setState({selectedOdds: null, betInput: 0, hasBet: false})
         } else {
           this.setState({data: Object.assign({}, data) }, function() {
             console.log(this.state.data)
@@ -115,13 +116,16 @@ class WarOfBets extends Component {
     if(!this.state.selectedOdds && !this.state.betInput) {
       this.setState({error: 'Please select an option, and your amount to bet'})
       return
-    } else if(!this.state.betInput) {
+    } else if(this.state.hasBet) {
+      this.setState({error: 'You have already placed a bet for this game part'})
+      return
+    }else if(!this.state.betInput) {
       this.setState({error: 'Please select an amount to bet'})
       return
     } else if (!this.state.selectedOdds) {
       this.setState({error: 'Please select an option'})
       return
-    }
+    } 
 
     self.setState({placingBet: true})
 
@@ -137,7 +141,8 @@ class WarOfBets extends Component {
       self.setState({
         placingBet: false, 
         user: Object.assign({}, self.state.user, {currentBalance: self.state.user.currentBalance - self.state.betInput}),
-        error: null
+        error: null,
+        hasBet: true
       })
     })
   }
@@ -275,7 +280,22 @@ class WarOfBets extends Component {
 
           <p>Maximum Bet: $100.00</p>
 
-          <PlaceBetButton onClick={this.placeBet} disabled={!this.state.betInput || !this.state.gamePartId || this.state.placingBet} />
+          {
+            this.state.hasBet ?
+            <section className="place-bet-alerts">
+              <div className="alert alert-info">
+                <span className="glyphicon glyphicon-exclamation-sign"></span>
+                &nbsp;Your bet has been placed successfully.
+              </div>
+            </section>
+            :
+            null
+          }
+
+          <PlaceBetButton onClick={this.placeBet} disabled={!this.state.betInput || !this.state.gamePartId || this.state.placingBet || this.state.hasBet } />
+
+          
+
           </BetSlip>
       </div>
     )
