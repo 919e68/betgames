@@ -291,6 +291,13 @@ poker.stdout.on('data', function (data) {
             outcomeId: 5,
             odds: !isNaN(json.data.odds.hand_5.odds) ? json.data.odds.hand_5.odds : null,
             params: JSON.stringify(json.data.odds.hand_5)
+          },
+          {
+            drawNumber: json.data.drawNumber,
+            gamePartId: json.data.gamePartId,
+            outcomeId: 6,
+            odds: !isNaN(json.data.odds.hand_6.odds) ? json.data.odds.hand_6.odds : null,
+            params: JSON.stringify(json.data.odds.hand_6)
           }
         ], {
           logging: false
@@ -332,6 +339,11 @@ poker.stdout.on('data', function (data) {
               } else if (odds[i].outcomeId == 5) {
                 oddsData.hand_5 = {
                   id: 5,
+                  odds: odds[i].odds
+                }
+              } else if (odds[i].outcomeId == 6) {
+                oddsData.hand_5 = {
+                  id: 6,
                   odds: odds[i].odds
                 }
               }
