@@ -31,7 +31,6 @@ export default class RecentBets extends Component {
   }
 
   render() {
-    console.log(this.props.bets)
     return (
       <aside className="bets-recent-history col-sm-4 ">
         <header>

@@ -72,12 +72,12 @@ class WarOfBets extends Component {
             war: { id: +draw.latestOdds[2].id, odds: draw.latestOdds[2].odds },
           })})
 
-          return Api.users.bets(1, draw.drawNumber)
+          return Api.users.bets(1, 3)
       }
     }).then( response => {
-      console.log(' CURRENT BETS', response)
+      // console.log(' CURRENT BETS', response)
       this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
-        console.log('recent bets', this.state.recentBets)
+        // console.log('recent bets', this.state.recentBets)
       })
     }).catch( err => {
       console.log(err)
@@ -86,10 +86,15 @@ class WarOfBets extends Component {
 
     this.socket.onmessage = (message) => {
         let data = JSON.parse(message.data)
-        // console.log(data)
+
+        if(data.game != 'war') {
+          return
+        }
+        
+        console.log(data)
 
         if(data.type == 'create') {
-          console.log(this.state)
+          // console.log(this.state)
           this.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber})
           this.setState({odds: Object.assign({}, data.data.odds)}, function(){
             // console.log(' ODDS' ,this.state.odds)
@@ -99,10 +104,9 @@ class WarOfBets extends Component {
           this.setState({selectedOdds: null, betInput: 0, hasBet: false})
           this.setState({limits: Object.assign({}, { min: null, max: null })}) 
 
-          Api.users.bets(1, data.data.drawNumber).then( response => {
-            console.log(' CURRENT BETS', response)
+          Api.users.bets(1, 3).then( response => {
             this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
-              console.log('recent bets', this.state.recentBets)
+              // console.log('recent bets', this.state.recentBets)
             })
           }).catch( err => {
             console.log(err)
