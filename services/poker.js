@@ -117,34 +117,34 @@ poker.stdout.on('data', function (data) {
             for (let i = 0; i < odds.length; i++) {
               if (odds[i].outcomeId == 1) {
                 oddsData.hand_1 = {
-                  id: 1,
+                  id: odds[i].id,
                   odds: odds[i].odds
                 }
 
               } else if (odds[i].outcomeId == 2) {
                 oddsData.hand_2 = {
-                  id: 2,
+                  id: odds[i].id,
                   odds: odds[i].odds
                 }
 
               } else if (odds[i].outcomeId == 3) {
                 oddsData.hand_3 = {
-                  id: 3,
+                  id: odds[i].id,
                   odds: odds[i].odds
                 }
               } else if (odds[i].outcomeId == 4) {
                 oddsData.hand_4 = {
-                  id: 4,
+                  id: odds[i].id,
                   odds: odds[i].odds
                 }
               } else if (odds[i].outcomeId == 5) {
                 oddsData.hand_5 = {
-                  id: 5,
+                  id: odds[i].id,
                   odds: odds[i].odds
                 }
               } else if (odds[i].outcomeId == 6) {
                 oddsData.hand_6= {
-                  id: 6,
+                  id: odds[i].id,
                   odds: odds[i].odds
                 }
               }
@@ -251,8 +251,6 @@ poker.stdout.on('data', function (data) {
               (function(i) {
 
                 let computedBalance = bets[i].User.currentBalance + (bets[i].amount * bets[i].Odd.odds)
-
-                bets[i].update({ isWinner: true }, { logging: false })
                 bets[i].User.update({ currentBalance: computedBalance }, { logging: false })
 
               })(i)
@@ -270,5 +268,4 @@ poker.stdout.on('data', function (data) {
       wss.broadcast(JSON.stringify(json))
     }
   }
-  
 })
