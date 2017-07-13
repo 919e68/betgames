@@ -14,6 +14,7 @@ module.exports = {
                 latestOdds {
                   id
                   odds
+                  gamePartId
                   outcome {
                     id
                     name

@@ -73,7 +73,7 @@ class Poker extends Component {
       console.log('LATEST DRAW', response)
       let { draw } = response.data.data.latestDraw
       if(!this.state.drawNumber) {
-          this.setState({gamePartId: draw.id, drawNumber: draw.drawNumber})
+          this.setState({gamePartId: draw.latestOdds[0].gamePartId, drawNumber: draw.drawNumber})
           this.setState({odds: Object.assign({}, {
             hand_1: { id: +draw.latestOdds[0].id, odds: draw.latestOdds[0].odds },
             hand_2: { id: +draw.latestOdds[1].id, odds: draw.latestOdds[1].odds },
@@ -106,7 +106,7 @@ class Poker extends Component {
 
 
         if(data.type == 'create') {
-          console.log(data)
+          console.log('CREATE', data)
           this.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber})
           this.setState({odds: Object.assign({}, data.data.odds)}, function(){
             // console.log(' ODDS' ,this.state.odds)
@@ -227,7 +227,7 @@ class Poker extends Component {
             {
               this.state.gameParts.map( (gamePart, index) => {
                 return (
-                  <GamePart key={index} title={gamePart.title} width={this.state.gamePartId == gamePart.id || index == 0 ? 100 : 0} length={this.state.gameParts.length} />
+                  <GamePart key={index} title={gamePart.title} width={this.state.gamePartId >= gamePart.id || index == 0 ? 100 : 0} length={this.state.gameParts.length} />
                 )
               })
             }
@@ -241,11 +241,11 @@ class Poker extends Component {
           <BetOptions>
             <BetOption 
               showingWinner={data.type == 'winner'}
-              winner={data.data ? data.data.winner == 'dealer' : false}
+              winner={data.data ? data.data.winner == 'hand_1' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' } 
               betName={Translate('Hand 1 Wins')} 
-              // active={selectedOdds ? selectedOdds.winner == 'dealer' : false}
+              active={selectedOdds ? selectedOdds.winner == 'hand_1' : false}
               odds={!odds.hand_1 ? null : odds.hand_1.odds}
               onClick={() => {
                 let bet = {
@@ -262,14 +262,14 @@ class Poker extends Component {
                 }
               }}
             />
-            
+
             <BetOption 
               showingWinner={data.type == 'winner'}
-              winner={data.data ? data.data.winner == 'dealer' : false}
+              winner={data.data ? data.data.winner == 'hand_2' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' } 
               betName={Translate('Hand 2 Wins')} 
-              // active={selectedOdds ? selectedOdds.winner == 'dealer' : false}
+              active={selectedOdds ? selectedOdds.winner == 'hand_2' : false}
               odds={!odds.hand_2 ? null : odds.hand_2.odds}
               onClick={() => {
                 let bet = {
@@ -288,11 +288,11 @@ class Poker extends Component {
             />
             <BetOption 
               showingWinner={data.type == 'winner'}
-              winner={data.data ? data.data.winner == 'dealer' : false}
+              winner={data.data ? data.data.winner == 'hand_3' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' } 
               betName={Translate('Hand 3 Wins')} 
-              // active={selectedOdds ? selectedOdds.winner == 'dealer' : false}
+              active={selectedOdds ? selectedOdds.winner == 'hand_3' : false}
               odds={!odds.hand_3 ? null : odds.hand_3.odds}
               onClick={() => {
                 let bet = {
@@ -311,11 +311,11 @@ class Poker extends Component {
             />
             <BetOption 
               showingWinner={data.type == 'winner'}
-              winner={data.data ? data.data.winner == 'dealer' : false}
+              winner={data.data ? data.data.winner == 'hand_4' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' } 
               betName={Translate('Hand 4 Wins')} 
-              // active={selectedOdds ? selectedOdds.winner == 'dealer' : false}
+              active={selectedOdds ? selectedOdds.winner == 'hand_4' : false}
               odds={!odds.hand_4 ? null : odds.hand_4.odds}
               onClick={() => {
                 let bet = {
@@ -334,11 +334,11 @@ class Poker extends Component {
             />
             <BetOption 
               showingWinner={data.type == 'winner'}
-              winner={data.data ? data.data.winner == 'dealer' : false}
+              winner={data.data ? data.data.winner == 'hand_4' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' } 
               betName={Translate('Hand 5 Wins')} 
-              // active={selectedOdds ? selectedOdds.winner == 'dealer' : false}
+              active={selectedOdds ? selectedOdds.winner == 'hand_4' : false}
               odds={!odds.hand_5 ? null : odds.hand_5.odds}
               onClick={() => {
                 let bet = {
@@ -357,11 +357,11 @@ class Poker extends Component {
             />
             <BetOption 
               showingWinner={data.type == 'winner'}
-              winner={data.data ? data.data.winner == 'dealer' : false}
+              winner={data.data ? data.data.winner == 'hand_6' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' } 
               betName={Translate('Hand 6 Wins')} 
-              // active={selectedOdds ? selectedOdds.winner == 'dealer' : false}
+              // active={selectedOdds ? selectedOdds.winner == 'hand_6' : false}
               odds={!odds.hand_6 ? null : odds.hand_6.odds}
               onClick={() => {
                 let bet = {

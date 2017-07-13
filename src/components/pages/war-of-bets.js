@@ -108,6 +108,7 @@ class WarOfBets extends Component {
             this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
               // console.log('recent bets', this.state.recentBets)
             })
+            this.setState({ user: Object.assign({}, this.state.user, {currentBalance: response.data.data.user.currentBalance})})
           }).catch( err => {
             console.log(err)
           })  

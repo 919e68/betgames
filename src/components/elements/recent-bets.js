@@ -10,6 +10,10 @@ export default class RecentBets extends Component {
     } else {
       return (
         this.props.bets.map( (bet, i) => {
+          
+          if(!bet.odd) {
+            return
+          }
 
           if(bet.odd.isWinner == null) {
             return
