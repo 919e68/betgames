@@ -121,6 +121,7 @@ class Poker extends Component {
             this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
               // console.log('recent bets', this.state.recentBets)
             })
+            this.setState({ user: Object.assign({}, this.state.user, {currentBalance: response.data.data.user.currentBalance})})
           }).catch( err => {
             console.log(err)
           })  
@@ -338,7 +339,7 @@ class Poker extends Component {
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' } 
               betName={Translate('Hand 5 Wins')} 
-              active={selectedOdds ? selectedOdds.winner == 'hand_4' : false}
+              active={selectedOdds ? selectedOdds.winner == 'hand_5' : false}
               odds={!odds.hand_5 ? null : odds.hand_5.odds}
               onClick={() => {
                 let bet = {
