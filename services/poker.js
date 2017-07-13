@@ -42,43 +42,43 @@ poker.stdout.on('data', function (data) {
 
       } else if (json.table == 'odd') {
 
-        console.log(json)
+        console.log(JSON.stringify(json, null, 2))
 
         db.Odd.bulkCreate([
           {
             drawNumber: json.data.drawNumber,
             gamePartId: json.data.gamePartId,
             outcomeId: 1,
-            odds: !isNaN(json.data.hand_1.odds) ? json.data.hand_1.odds : null,
-            params: JSON.stringify(json.data.hand_1)
+            odds: !isNaN(json.data.odds.hand_1.odds) ? json.data.odds.hand_1.odds : null,
+            params: JSON.stringify(json.data.odds.hand_1)
           },
           {
             drawNumber: json.data.drawNumber,
             gamePartId: json.data.gamePartId,
             outcomeId: 2,
-            odds: !isNaN(json.data.hand_2.odds) ? json.data.hand_2.odds : null,
-            params: JSON.stringify(json.data.hand_2)
+            odds: !isNaN(json.data.odds.hand_2.odds) ? json.data.odds.hand_2.odds : null,
+            params: JSON.stringify(json.data.odds.hand_2)
           },
           {
             drawNumber: json.data.drawNumber,
             gamePartId: json.data.gamePartId,
             outcomeId: 3,
-            odds: !isNaN(json.data.hand_3.odds) ? json.data.hand_3.odds : null,
-            params: JSON.stringify(json.data.hand_3)
+            odds: !isNaN(json.data.odds.hand_3.odds) ? json.data.odds.hand_3.odds : null,
+            params: JSON.stringify(json.data.odds.hand_3)
           },
           {
             drawNumber: json.data.drawNumber,
             gamePartId: json.data.gamePartId,
             outcomeId: 4,
-            odds: !isNaN(json.data.hand_4.odds) ? json.data.hand_4.odds : null,
-            params: JSON.stringify(json.data.hand_4)
+            odds: !isNaN(json.data.odds.hand_4.odds) ? json.data.odds.hand_4.odds : null,
+            params: JSON.stringify(json.data.odds.hand_4)
           },
           {
             drawNumber: json.data.drawNumber,
             gamePartId: json.data.gamePartId,
             outcomeId: 5,
-            odds: !isNaN(json.data.hand_5.odds) ? json.data.hand_5.odds : null,
-            params: JSON.stringify(json.data.hand_5)
+            odds: !isNaN(json.data.odds.hand_5.odds) ? json.data.odds.hand_5.odds : null,
+            params: JSON.stringify(json.data.odds.hand_5)
           }
         ], {
           logging: false
@@ -88,7 +88,8 @@ poker.stdout.on('data', function (data) {
             where: {
               drawNumber: json.data.drawNumber,
               gamePartId: json.data.gamePartId
-            }
+            },
+            logging: false
           }).then(odds => {
 
             let oddsData = {}
@@ -135,7 +136,7 @@ poker.stdout.on('data', function (data) {
                 odds: oddsData
               }
             }))
-            
+
           }).catch(err => {
             console.log(err)
           })
@@ -147,107 +148,104 @@ poker.stdout.on('data', function (data) {
 
     } else if (json.type == 'winner') {
 
-      console.log(json)
-
-      // db.Draw.update({
-      //   winner: json.data.winner,
-      //   winningNumber: json.data.winningNumber,
-      //   winningSymbol: json.data.winningSymbol
-      // }, {
-      //   where: {
-      //     drawNumber: json.data.drawNumber
-      //   },
-      //   logging: false
-      // }).then(draw => {
+      db.Draw.update({
+        winner: json.data.winner,
+        winningNumber: json.data.winningNumber,
+        winningSymbol: json.data.winningSymbol
+      }, {
+        where: {
+          drawNumber: json.data.drawNumber
+        },
+        logging: false
+      }).then(draw => {
 
         
-      //   if (draw) {
+        if (draw) {
 
-      //     // send winning data to websocket client
-      //     console.log(`draw (${json.data.drawNumber}) updated`)
-      //     wss.broadcast(JSON.stringify(json))
-
-
-      //     // update winner and loser odds
-      //     let outcomeId = null
-
-      //     if (json.data.winner == 'dealer') {
-      //       outcomeId = 10
-
-      //     } else if (json.data.winner == 'player') {
-      //       outcomeId = 11
-
-      //     } else if (json.data.winner == 'war') {
-      //       outcomeId = 12
-      //     }
-
-      //     // update losers
-      //     db.sequelize.query('UPDATE Bets SET Bets.isWinner = 0 FROM Bets INNER JOIN Odds ON Odds.id = Bets.oddId WHERE Odds.outcomeId != :outcomeId', { 
-      //       replacements: {
-      //         outcomeId: outcomeId
-      //       },
-      //       type: db.sequelize.QueryTypes.UPDATE,
-      //       logging: false
-      //     })
-
-      //     db.sequelize.query('UPDATE Odds SET Odds.isWinner = 0 WHERE Odds.outcomeId != :outcomeId', { 
-      //       replacements: {
-      //         outcomeId: outcomeId
-      //       },
-      //       type: db.sequelize.QueryTypes.UPDATE,
-      //       logging: false
-      //     })
+          // send winning data to websocket client
+          console.log(`draw (${json.data.drawNumber}) updated`)
+          wss.broadcast(JSON.stringify(json))
 
 
-      //     // update winners
-      //     db.sequelize.query('UPDATE Odds SET Odds.isWinner = 1 WHERE Odds.outcomeId = :outcomeId', { 
-      //       replacements: {
-      //         outcomeId: outcomeId
-      //       },
-      //       type: db.sequelize.QueryTypes.UPDATE,
-      //       logging: false
-      //     })
+          // update winner and loser odds
+          let winningOutcomeId = {
+            hand_1: 1,
+            hand_2: 2,
+            hand_3: 3,
+            hand_4: 4,
+            hand_5: 5
+          }
 
-      //     db.Bet.findAll({
-      //       where: {
-      //         drawNumber: json.data.drawNumber
-      //       },
-      //       include: [
-      //         {
-      //           model: db.User,
-      //           attributes: ['id', 'currentBalance']
-      //         },
-      //         {
-      //           model: db.Odd,
-      //           attributes: ['id', 'odds'],
-      //           where: {
-      //             outcomeId: outcomeId
-      //           }
-      //         }
-      //       ],
-      //       logging: false
-      //     }).then(bets => {
+          let outcomeId = winningOutcomeId[json.data.winner]
 
-      //       for (let i = 0; i < bets.length; i++) {
-      //         (function(i) {
+          console.log(json.data.winner)
 
-      //           let computedBalance = bets[i].User.currentBalance + (bets[i].amount * bets[i].Odd.odds)
+          // update losers
+          db.sequelize.query('UPDATE Bets SET Bets.isWinner = 0 FROM Bets INNER JOIN Odds ON Odds.id = Bets.oddId WHERE Odds.outcomeId != :outcomeId AND Bets.drawNumber = :drawNumber', { 
+            replacements: {
+              outcomeId: outcomeId,
+              drawNumber: json.data.drawNumber
+            },
+            type: db.sequelize.QueryTypes.UPDATE,
+            logging: false
+          })
 
-      //           bets[i].update({ isWinner: true }, { logging: false })
-      //           bets[i].User.update({ currentBalance: computedBalance }, { logging: false })
-
-      //         })(i)
-      //       }
-
-      //     })
-      //   }
+          db.sequelize.query('UPDATE Odds SET Odds.isWinner = 0 WHERE Odds.outcomeId != :outcomeId AND Odds.drawNumber = :drawNumber', { 
+            replacements: {
+              outcomeId: outcomeId,
+              drawNumber: json.data.drawNumber
+            },
+            type: db.sequelize.QueryTypes.UPDATE,
+            logging: false
+          })
 
 
-      // }).catch(err => {
+          // update winners
+          db.sequelize.query('UPDATE Odds SET Odds.isWinner = 1 WHERE Odds.outcomeId = :outcomeId AND Odds.drawNumber = :drawNumber', { 
+            replacements: {
+              outcomeId: outcomeId,
+              drawNumber: json.data.drawNumber
+            },
+            type: db.sequelize.QueryTypes.UPDATE,
+            logging: false
+          })
 
-      //   console.log(err)
+          db.Bet.findAll({
+            where: {
+              drawNumber: json.data.drawNumber
+            },
+            include: [
+              {
+                model: db.User,
+                attributes: ['id', 'currentBalance']
+              },
+              {
+                model: db.Odd,
+                attributes: ['id', 'odds'],
+                where: {
+                  outcomeId: outcomeId
+                }
+              }
+            ],
+            logging: false
+          }).then(bets => {
 
-      // })
+            for (let i = 0; i < bets.length; i++) {
+              (function(i) {
+
+                let computedBalance = bets[i].User.currentBalance + (bets[i].amount * bets[i].Odd.odds)
+
+                bets[i].update({ isWinner: true }, { logging: false })
+                bets[i].User.update({ currentBalance: computedBalance }, { logging: false })
+
+              })(i)
+            }
+
+          })
+        }
+      }).catch(err => {
+        console.log(err)
+      })
 
     } else {
 
