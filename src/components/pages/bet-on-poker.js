@@ -117,7 +117,7 @@ class Poker extends Component {
         }
 
         if(data.type == 'create') {
-          console.log('CREATE', data)
+          console.log('CREATEe', data)
           this.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber})
           this.setState({odds: Object.assign({}, data.data.odds)}, function(){
             // console.log(' ODDS' ,this.state.odds)
@@ -135,7 +135,7 @@ class Poker extends Component {
             this.setState({ user: Object.assign({}, this.state.user, {currentBalance: response.data.data.user.currentBalance})})
           }).catch( err => {
             console.log(err)
-          })  
+          })
 
         } else {
           this.setState({data: Object.assign({}, data) }, function() {
