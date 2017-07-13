@@ -17,10 +17,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BIGINT,
       allowNull: true
     },
-    isWinner: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true
-    },
     amount: {
       type: DataTypes.FLOAT,
       allowNull: true

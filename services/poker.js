@@ -207,15 +207,6 @@ poker.stdout.on('data', function (data) {
           console.log(json.data.winner)
 
           // update losers
-          db.sequelize.query('UPDATE Bets SET Bets.isWinner = 0 FROM Bets INNER JOIN Odds ON Odds.id = Bets.oddId WHERE Odds.outcomeId != :outcomeId AND Bets.drawNumber = :drawNumber', { 
-            replacements: {
-              outcomeId: outcomeId,
-              drawNumber: json.data.drawNumber
-            },
-            type: db.sequelize.QueryTypes.UPDATE,
-            logging: false
-          })
-
           db.sequelize.query('UPDATE Odds SET Odds.isWinner = 0 WHERE Odds.outcomeId != :outcomeId AND Odds.drawNumber = :drawNumber', { 
             replacements: {
               outcomeId: outcomeId,

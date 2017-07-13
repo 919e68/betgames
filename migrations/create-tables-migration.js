@@ -165,7 +165,6 @@ module.exports = {
         userId: Sequelize.BIGINT,
         oddId: Sequelize.BIGINT,
         amount: Sequelize.FLOAT,
-        isWinner: Sequelize.BOOLEAN,
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE
       }
