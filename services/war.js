@@ -22,6 +22,7 @@ warOfBets.stdout.on('data', function (data) {
 
   for (let i = 0; i < datas.length - 1; i++) {
     let json = JSON.parse(datas[i].toString())
+    json.game = 'war'
 
     if (json.type == 'create') {
 
