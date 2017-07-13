@@ -43,7 +43,7 @@ module.exports = {
         },
         resolve: (user, { gameId }) => {
           return new Promise((resolve, reject) => {
-            let drawWhere = {}
+            let drawWhere = {}  
 
             if (!gameId) {
               reject('gameId is required')

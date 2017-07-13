@@ -70,6 +70,9 @@ module.exports = {
       amount: {
         type: GraphQLFloat
       },
+      isWinner: {
+        type: GraphQLBoolean
+      },
       createdAt: {
         type: GraphQLString
       },
