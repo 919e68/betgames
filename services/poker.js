@@ -118,33 +118,39 @@ poker.stdout.on('data', function (data) {
               if (odds[i].outcomeId == 1) {
                 oddsData.hand_1 = {
                   id: odds[i].id,
+                  params: odds[i].params,
                   odds: odds[i].odds
                 }
 
               } else if (odds[i].outcomeId == 2) {
                 oddsData.hand_2 = {
                   id: odds[i].id,
+                  params: odds[i].params,
                   odds: odds[i].odds
                 }
 
               } else if (odds[i].outcomeId == 3) {
                 oddsData.hand_3 = {
                   id: odds[i].id,
+                  params: odds[i].params,
                   odds: odds[i].odds
                 }
               } else if (odds[i].outcomeId == 4) {
                 oddsData.hand_4 = {
                   id: odds[i].id,
+                  params: odds[i].params,
                   odds: odds[i].odds
                 }
               } else if (odds[i].outcomeId == 5) {
                 oddsData.hand_5 = {
                   id: odds[i].id,
+                  params: odds[i].params,
                   odds: odds[i].odds
                 }
               } else if (odds[i].outcomeId == 6) {
                 oddsData.hand_6= {
                   id: odds[i].id,
+                  params: odds[i].params,
                   odds: odds[i].odds
                 }
               }
