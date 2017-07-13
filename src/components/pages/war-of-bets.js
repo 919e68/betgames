@@ -20,6 +20,7 @@ import BetButtonGroup from '../elements/bet-button-group'
 import BetButton from '../elements/bet-button'
 import PlaceBetButton from '../elements/place-bet-button'
 import BetInput from '../elements/bet-input'
+import API from '../../api'
 
 class WarOfBets extends Component {
 
@@ -50,21 +51,36 @@ class WarOfBets extends Component {
   }
 
   componentDidMount() {
-    // let self = this
     this.socket = new WebSocket('ws://localhost:7000')
+
+    API.GetLatestDraw(3).then( response => {
+      console.log('LATEST DRAW', response)
+      let { draw } = response.data.data.latestDraw
+      if(!this.state.drawNumber) {
+          this.setState({gamePartId: draw.id, drawNumber: draw.drawNumber})
+          this.setState({odds: Object.assign({}, {
+            dealer: { id: +draw.latestOdds[0].id, odds: draw.latestOdds[0].odds },
+            player: { id: +draw.latestOdds[1].id, odds: draw.latestOdds[1].odds },
+            war: { id: +draw.latestOdds[2].id, odds: draw.latestOdds[2].odds },
+          })})
+      }
+    }).catch( err => {
+      console.log(err)
+    })
 
     this.socket.onmessage = (message) => {
         let data = JSON.parse(message.data)
         // console.log(data)
 
         if(data.type == 'create') {
-            this.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber})
-            this.setState({odds: Object.assign({}, data.data.odds)}, function(){
-              // console.log(' ODDS' ,this.state.odds)
-            })
+          console.log(this.state)
+          this.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber})
+          this.setState({odds: Object.assign({}, data.data.odds)}, function(){
+            // console.log(' ODDS' ,this.state.odds)
+          })
 
-            // RESET DATA 
-            this.setState({selectedOdds: null, betInput: 0})
+          // RESET DATA 
+          this.setState({selectedOdds: null, betInput: 0})
         } else {
           this.setState({data: Object.assign({}, data) }, function() {
             console.log(this.state.data)
