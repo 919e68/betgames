@@ -20,7 +20,7 @@ import BetButtonGroup from '../elements/bet-button-group'
 import BetButton from '../elements/bet-button'
 import PlaceBetButton from '../elements/place-bet-button'
 import BetInput from '../elements/bet-input'
-import API from '../../api'
+import Api from '../../api'
 
 class WarOfBets extends Component {
 
@@ -53,7 +53,7 @@ class WarOfBets extends Component {
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:7000')
 
-    API.GetLatestDraw(3).then( response => {
+    Api.draw.latestDraw(3).then( response => {
       console.log('LATEST DRAW', response)
       let { draw } = response.data.data.latestDraw
       if(!this.state.drawNumber) {
@@ -89,17 +89,7 @@ class WarOfBets extends Component {
     }
 
     // LOGIN USER 1
-    axios.post('http://localhost:3000/graphql', {
-      query: `
-        query {
-          user(id: 1) {
-            id
-            currentBalance
-            username
-          }
-        }
-      `
-    }).then(response => {
+    Api.user.get(1).then(response => {
       this.setState({user: Object.assign({}, response.data.data.user) }, function() {
         console.log(this.state.user)
       })
@@ -134,27 +124,15 @@ class WarOfBets extends Component {
     }
 
     self.setState({placingBet: true})
-    axios.post('http://localhost:3000/graphql', {
-      query: `
-        mutation {
-          createBet(data: {
-            drawNumber: "${self.state.drawNumber}",
-            userId: "1",
-            oddId: "${self.state.selectedOdds.odds.id}",
-            amount: ${self.state.betInput}
-          }) 
-          {
-            bet {
-              id
-            }
-            errors {
-              key
-              msg
-            }
-          }
-        }
-      `
-    }).then(response => {
+
+    let data = {
+      drawNumber: self.state.drawNumber,
+      userId: 1,
+      oddId: self.state.selectedOdds.odds.id,
+      amount: self.state.betInput
+    }
+
+    Api.bet.create(data).then(response => {
       console.log('PLACE BET RESPONSE', response)
       self.setState({
         placingBet: false, 
