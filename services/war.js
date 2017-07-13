@@ -78,19 +78,19 @@ warOfBets.stdout.on('data', function (data) {
             for (let i = 0; i < odds.length; i++) {
               if (odds[i].outcomeId == 10) {
                 oddsData.dealer = {
-                  id: 10,
+                  id: odds[i].id,
                   odds: odds[i].odds
                 }
 
               } else if (odds[i].outcomeId == 11) {
                 oddsData.player = {
-                  id: 11,
+                  id: odds[i].id,
                   odds: odds[i].odds
                 }
 
               } else if (odds[i].outcomeId == 12) {
                 oddsData.war = {
-                  id: 12,
+                  id: odds[i].id,
                   odds: odds[i].odds
                 }
               }
