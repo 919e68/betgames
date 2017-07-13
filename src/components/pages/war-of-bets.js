@@ -86,11 +86,12 @@ class WarOfBets extends Component {
 
     this.socket.onmessage = (message) => {
         let data = JSON.parse(message.data)
-        console.log(data)
 
         if(data.game != 'war') {
           return
         }
+        
+        console.log(data)
 
         if(data.type == 'create') {
           // console.log(this.state)

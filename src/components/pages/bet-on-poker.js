@@ -94,7 +94,13 @@ class Poker extends Component {
 
     this.socket.onmessage = (message) => {
         let data = JSON.parse(message.data)
+        
+        if(data.game != 'poker') {
+          return
+        }
+
         console.log('NEW DATA', data)
+
 
         if(data.type == 'create') {
           console.log(this.state)
