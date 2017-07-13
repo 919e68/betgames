@@ -44,82 +44,111 @@ poker.stdout.on('data', function (data) {
 
         console.log(json)
 
-        // db.Odd.bulkCreate([
-        //   {
-        //     drawNumber: json.data.drawNumber,
-        //     gamePartId: json.data.gamePartId,
-        //     outcomeId: 10,
-        //     odds: !isNaN(json.data.odds.dealer) ? json.data.odds.dealer : null
-        //   },
-        //   {
-        //     drawNumber: json.data.drawNumber,
-        //     gamePartId: json.data.gamePartId,
-        //     outcomeId: 11,
-        //     odds: !isNaN(json.data.odds.player) ? json.data.odds.player : null
-        //   },
-        //   {
-        //     drawNumber: json.data.drawNumber,
-        //     gamePartId: json.data.gamePartId,
-        //     outcomeId: 12,
-        //     odds: !isNaN(json.data.odds.war) ? json.data.odds.war : null
-        //   }
-        // ], {
-        //   logging: false
-        // }).then(data => {
+        db.Odd.bulkCreate([
+          {
+            drawNumber: json.data.drawNumber,
+            gamePartId: json.data.gamePartId,
+            outcomeId: 1,
+            odds: !isNaN(json.data.hand_1.odds) ? json.data.hand_1.odds : null,
+            params: JSON.stringify(json.data.hand_1)
+          },
+          {
+            drawNumber: json.data.drawNumber,
+            gamePartId: json.data.gamePartId,
+            outcomeId: 2,
+            odds: !isNaN(json.data.hand_2.odds) ? json.data.hand_2.odds : null,
+            params: JSON.stringify(json.data.hand_2)
+          },
+          {
+            drawNumber: json.data.drawNumber,
+            gamePartId: json.data.gamePartId,
+            outcomeId: 3,
+            odds: !isNaN(json.data.hand_3.odds) ? json.data.hand_3.odds : null,
+            params: JSON.stringify(json.data.hand_3)
+          },
+          {
+            drawNumber: json.data.drawNumber,
+            gamePartId: json.data.gamePartId,
+            outcomeId: 4,
+            odds: !isNaN(json.data.hand_4.odds) ? json.data.hand_4.odds : null,
+            params: JSON.stringify(json.data.hand_4)
+          },
+          {
+            drawNumber: json.data.drawNumber,
+            gamePartId: json.data.gamePartId,
+            outcomeId: 5,
+            odds: !isNaN(json.data.hand_5.odds) ? json.data.hand_5.odds : null,
+            params: JSON.stringify(json.data.hand_5)
+          }
+        ], {
+          logging: false
+        }).then(data => {
 
-          
-        //   db.Odd.findAll({
-        //     where: {
-        //       drawNumber: json.data.drawNumber,
-        //       gamePartId: json.data.gamePartId
-        //     }
-        //   }).then(odds => {
+          db.Odd.findAll({
+            where: {
+              drawNumber: json.data.drawNumber,
+              gamePartId: json.data.gamePartId
+            }
+          }).then(odds => {
 
-        //     let oddsData = {}
+            let oddsData = {}
 
-        //     for (let i = 0; i < odds.length; i++) {
-        //       if (odds[i].outcomeId == 10) {
-        //         oddsData.dealer = {
-        //           id: 10,
-        //           odds: odds[i].odds
-        //         }
+            for (let i = 0; i < odds.length; i++) {
+              if (odds[i].outcomeId == 1) {
+                oddsData.hand_1 = {
+                  id: 1,
+                  odds: odds[i].odds
+                }
 
-        //       } else if (odds[i].outcomeId == 11) {
-        //         oddsData.player = {
-        //           id: 11,
-        //           odds: odds[i].odds
-        //         }
+              } else if (odds[i].outcomeId == 2) {
+                oddsData.hand_2 = {
+                  id: 2,
+                  odds: odds[i].odds
+                }
 
-        //       } else if (odds[i].outcomeId == 12) {
-        //         oddsData.war = {
-        //           id: 12,
-        //           odds: odds[i].odds
-        //         }
-        //       }
-        //     }
+              } else if (odds[i].outcomeId == 3) {
+                oddsData.hand_3 = {
+                  id: 3,
+                  odds: odds[i].odds
+                }
+              } else if (odds[i].outcomeId == 4) {
+                oddsData.hand_4 = {
+                  id: 4,
+                  odds: odds[i].odds
+                }
+              } else if (odds[i].outcomeId == 5) {
+                oddsData.hand_5 = {
+                  id: 5,
+                  odds: odds[i].odds
+                }
+              }
+            }
 
-        //     console.log(`success inserting (${data.length}) odds for draw (${json.data.drawNumber}) game part (${json.data.gamePartId})`)
+            console.log(`success inserting (${data.length}) odds for draw (${json.data.drawNumber}) game part (${json.data.gamePartId})`)
 
-        //     wss.broadcast(JSON.stringify({
-        //       type: 'create',
-        //       table: 'odd',
-        //       data: {
-        //         drawNumber: json.data.drawNumber,
-        //         gamePartId: json.data.gamePartId,
-        //         odds: oddsData
-        //       }
-        //     }))
-        //   })
-        // }).catch(err => {
-        //   console.log(err)
-        // })
+            wss.broadcast(JSON.stringify({
+              type: 'create',
+              table: 'odd',
+              data: {
+                drawNumber: json.data.drawNumber,
+                gamePartId: json.data.gamePartId,
+                odds: oddsData
+              }
+            }))
+            
+          }).catch(err => {
+            console.log(err)
+          })
+        }).catch(err => {
+          console.log(err)
+        })
       }
 
 
     } else if (json.type == 'winner') {
 
       console.log(json)
-      
+
       // db.Draw.update({
       //   winner: json.data.winner,
       //   winningNumber: json.data.winningNumber,

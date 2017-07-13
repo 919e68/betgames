@@ -8,7 +8,6 @@ const {
 
 const db = require('../../models/db')
 const Odd = require('./odd')
-const User = require('./user')
 const Draw = require('./draw')
 
 module.exports = {
@@ -22,7 +21,7 @@ module.exports = {
         type: GraphQLID
       },
       draw: {
-        type: Draw.Type
+        type: Draw.Type,
         resolve: (bet) => {
           return new Promise((resolve, reject) => {
             db.Draw.findOne({
@@ -41,18 +40,18 @@ module.exports = {
       userId: {
         type: GraphQLID
       },
-      user: {
-        type: User.Type,
-        resolve: (bet) => {
-          return new Promise((resolve, reject) => {
-            db.User.findById(bet.userId).then(user => {
-              resolve(user)
-            }).catch(err => {
-              reject(err)
-            })
-          })
-        }
-      },
+      // user: {
+      //   type: User.Type,
+      //   resolve: (bet) => {
+      //     return new Promise((resolve, reject) => {
+      //       db.User.findById(bet.userId).then(user => {
+      //         resolve(user)
+      //       }).catch(err => {
+      //         reject(err)
+      //       })
+      //     })
+      //   }
+      // },
       oddId: {
         type: GraphQLID
       },

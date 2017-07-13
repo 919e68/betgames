@@ -14,7 +14,7 @@ const Bet = require('./bet')
 module.exports = {
   Type: new GraphQLObjectType({
     name: 'User',
-    fields: {
+    fields: () => ({
       id: {
         type: GraphQLID
       },
@@ -35,14 +35,28 @@ module.exports = {
       },
       bets: {
         type: new GraphQLList(Bet.Type),
-        resolve: (bet) => {
+        args: {
+          gameId: {
+            name: 'gameId',
+            type: GraphQLInt
+          }
+        },
+        resolve: (user, { gameId }) => {
           return new Promise((resolve, reject) => {
-            db.User.findAll({
-              where: {
-                
-              }
-            }).then(user => {
-              resolve(user)
+            let drawWhere = {}
+
+            if (!gameId) {
+              reject('gameId is required')
+            }
+
+            db.sequelize.query('SELECT Bets.* FROM Bets INNER JOIN Draws ON Draws.drawNumber = Bets.drawNumber WHERE Bets.userId = :userId AND Draws.gameId = :gameId', { 
+              replacements: {
+                userId: user.id,
+                gameId: gameId
+              },
+              model: db.Bet 
+            }).then(bets => {
+              resolve(bets)
             }).catch(err => {
               reject(err)
             })
@@ -54,9 +68,8 @@ module.exports = {
       },
       updatedAt: {
         type: GraphQLString
-      },
-
-    }
+      }
+    })
   }),
 
   Input: new GraphQLInputObjectType({
@@ -76,7 +89,7 @@ module.exports = {
       },
       password: {
         type: GraphQLString
-      },
+      }
     }
   })
 }
