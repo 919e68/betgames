@@ -63,6 +63,36 @@ module.exports = {
           })
         }
       },
+      recentBets: {
+        type: new GraphQLList(Bet.Type),
+        args: {
+          gameId: {
+            name: 'gameId',
+            type: GraphQLInt
+          }
+        },
+        resolve: (user, { gameId }) => {
+          return new Promise((resolve, reject) => {
+            let drawWhere = {}  
+
+            if (!gameId) {
+              reject('gameId is required')
+            }
+
+            db.sequelize.query('SELECT Bets.* FROM Bets INNER JOIN Draws ON Draws.drawNumber = Bets.drawNumber WHERE Bets.userId = :userId AND Draws.gameId = :gameId ORDER BY Bets.updatedAt DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY;', { 
+              replacements: {
+                userId: user.id,
+                gameId: gameId
+              },
+              model: db.Bet 
+            }).then(bets => {
+              resolve(bets)
+            }).catch(err => {
+              reject(err)
+            })
+          })
+        }
+      },
       createdAt: {
         type: GraphQLString
       },

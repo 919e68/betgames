@@ -3,4 +3,7 @@ const db = require('../models/db')
 
 const user = require('../graphql/types/user')
 
-console.log(user)
+
+db.User.findAll({
+  limit: 10
+})
