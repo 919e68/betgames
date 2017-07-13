@@ -130,6 +130,7 @@ poker.stdout.on('data', function (data) {
             wss.broadcast(JSON.stringify({
               type: 'create',
               table: 'odd',
+              game: 'poker',
               data: {
                 drawNumber: json.data.drawNumber,
                 gamePartId: json.data.gamePartId,
