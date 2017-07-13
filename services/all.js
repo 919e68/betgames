@@ -102,6 +102,7 @@ war.stdout.on('data', function (data) {
             wss.broadcast(JSON.stringify({
               type: 'create',
               table: 'odd',
+              game: 'war',
               data: {
                 drawNumber: json.data.drawNumber,
                 gamePartId: json.data.gamePartId,
@@ -219,9 +220,8 @@ war.stdout.on('data', function (data) {
       wss.broadcast(JSON.stringify(json))
     }
   }
+  
 })
-
-
 
 
 
@@ -342,6 +342,7 @@ poker.stdout.on('data', function (data) {
             wss.broadcast(JSON.stringify({
               type: 'create',
               table: 'odd',
+              game: 'poker',
               data: {
                 drawNumber: json.data.drawNumber,
                 gamePartId: json.data.gamePartId,

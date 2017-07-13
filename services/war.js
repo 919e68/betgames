@@ -15,9 +15,9 @@ wss.broadcast = function broadcast(data) {
 }
 
 let spawn = process.spawn
-let warOfBets = spawn('phantomjs', ['services/war-phantom.js'])
 
-warOfBets.stdout.on('data', function (data) {
+let war = spawn('phantomjs', ['services/war-phantom.js'])
+war.stdout.on('data', function (data) {
   let datas = data.toString().split("\r\n")
 
   for (let i = 0; i < datas.length - 1; i++) {
@@ -101,6 +101,7 @@ warOfBets.stdout.on('data', function (data) {
             wss.broadcast(JSON.stringify({
               type: 'create',
               table: 'odd',
+              game: 'war',
               data: {
                 drawNumber: json.data.drawNumber,
                 gamePartId: json.data.gamePartId,
@@ -198,7 +199,7 @@ warOfBets.stdout.on('data', function (data) {
 
                 let computedBalance = bets[i].User.currentBalance + (bets[i].amount * bets[i].Odd.odds)
                 bets[i].User.update({ currentBalance: computedBalance }, { logging: false })
-                
+
               })(i)
             }
 
