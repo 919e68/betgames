@@ -1,6 +1,6 @@
 const process = require('child_process')
 const zlib = require('zlib')
-const db = require('../models/index')
+const db = require('../models/db')
 const WebSocket = require('ws')
  
 const wss = new WebSocket.Server({ port: 7000 })
@@ -92,7 +92,7 @@ warOfBets.stdout.on('data', function (data) {
 
               } else if (odds[i].outcomeId == 12) {
                 oddsData.war = {
-                  id: 12
+                  id: 12,
                   odds: odds[i].odds
                 }
               }

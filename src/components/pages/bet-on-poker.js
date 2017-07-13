@@ -61,12 +61,12 @@ class BetOnPoker extends Component {
     let self = this
     let socket = new WebSocket('ws://localhost:7000')
 
-    socket.onmessage = function(message) {
+    socket.onmessage = (message) => {
       let data = JSON.parse(message.data)
       console.log(data)
 
       if(data.type == 'create') {
-          self.setState({gamePartId: data.data.gamePartId})
+        self.setState({gamePartId: data.data.gamePartId})
       } else {
         self.setState({data: Object.assign({}, data) })
       }
@@ -87,7 +87,7 @@ class BetOnPoker extends Component {
 
   render() {
     let self = this;
-
+    console.log(this)
     return (
       <div>
         <Navbar user={this.state.user} />
