@@ -11,6 +11,7 @@ const {
 
 const db = require('../../models/db')
 const Odd = require('./odd')
+const Game = require('./game')
 
 module.exports = {
   Type: new GraphQLObjectType({
@@ -24,6 +25,18 @@ module.exports = {
       },
       gamePartId: {
         type: GraphQLID
+      },
+      game: {
+        type: Game.Type,
+        resolve: (draw) => {
+          return new Promise((resolve, reject) => {
+            db.Game.findById(draw.gameId).then(game => {
+              resolve(game)
+            }).catch(err => {
+              reject(err)
+            })
+          })
+        }
       },
       drawNumber: {
         type: GraphQLString

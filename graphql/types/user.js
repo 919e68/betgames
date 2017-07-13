@@ -1,11 +1,15 @@
 const { 
   GraphQLObjectType,
   GraphQLInputObjectType,
-  GraphQLID, 
-  GraphQLString, 
+  GraphQLID,
+  GraphQLInt,
   GraphQLFloat,
-  GraphQLInt
+  GraphQLString, 
+  GraphQLList
 } = require('graphql')
+
+const db = require('../../models/db')
+const Bet = require('./bet')
 
 module.exports = {
   Type: new GraphQLObjectType({
@@ -26,15 +30,32 @@ module.exports = {
       email: {
         type: GraphQLString
       },
+      currentBalance: {
+        type: GraphQLFloat
+      },
+      bets: {
+        type: new GraphQLList(Bet.Type),
+        resolve: (bet) => {
+          return new Promise((resolve, reject) => {
+            db.User.findAll({
+              where: {
+                
+              }
+            }).then(user => {
+              resolve(user)
+            }).catch(err => {
+              reject(err)
+            })
+          })
+        }
+      },
       createdAt: {
         type: GraphQLString
       },
       updatedAt: {
         type: GraphQLString
       },
-      currentBalance: {
-        type: GraphQLFloat
-      }
+
     }
   }),
 

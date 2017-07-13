@@ -10,7 +10,6 @@ page.onConsoleMessage = function(msg) {
 }
 
 
-
 if (address) {
   page.open(address, function(status) {
     page.evaluate(function() {
@@ -42,7 +41,7 @@ if (address) {
 
       function send(data) {
         setTimeout(function() {
-          console.log(JSON.stringify(data, null, 2))
+          console.log(JSON.stringify(data))
         }, 0)
       }
 
