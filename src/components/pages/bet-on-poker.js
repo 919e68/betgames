@@ -104,6 +104,17 @@ class Poker extends Component {
           return
         }
 
+        if(data.type == 'winner') {
+          Api.users.bets(1, 1).then( response => {
+            console.log(' CURRENT BETS', response)
+            this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
+              // console.log('recent bets', this.state.recentBets)
+            })
+            this.setState({ user: Object.assign({}, this.state.user, {currentBalance: response.data.data.user.currentBalance})})
+          }).catch( err => {
+            console.log(err)
+          }) 
+        }
 
         if(data.type == 'create') {
           console.log('CREATE', data)
