@@ -175,7 +175,7 @@ warOfBets.stdout.on('data', function (data) {
           // update winners
           db.sequelize.query('UPDATE Odds SET Odds.isWinner = 1 WHERE Odds.outcomeId = :outcomeId AND Odds.drawNumber = :drawNumber', { 
             replacements: {
-              outcomeId: outcomeId
+              outcomeId: outcomeId,
               drawNumber: json.data.drawNumber
             },
             type: db.sequelize.QueryTypes.UPDATE,
