@@ -59,7 +59,9 @@ export default class BetOption extends Component {
         className={"team list-group-item " + (this.props.disabled || !this.props.odds ? 'disabled ' : 'enabled ') + (this.props.active ? 'active' : '')} 
         onClick={this._onClick}>
         <span className="fav glyphicon glyphicon-star-empty" data-toggle="tooltip" data-placement="top" title="" data-original-title="You are not logged in"></span>
-        <span className="odd-name capitalized">{Translate(this.props.betName)}</span>
+        <span className="odd-name capitalized">
+          {Translate(this.props.betName)}
+        </span>
 
         { this.renderBadge() }
 
