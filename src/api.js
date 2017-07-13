@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 module.exports = {
-  draw: {
+  draws: {
     latestDraw: (gameId) => {
 
       return axios.post('http://localhost:3000/graphql', {
@@ -32,7 +32,7 @@ module.exports = {
     },
   },
 
-  user: {
+  users: {
     get: (userId) => {
       return axios.post('http://localhost:3000/graphql', {
         query: `
@@ -48,7 +48,7 @@ module.exports = {
     }
   },
 
-  bet: {
+  bets: {
     create: (data) => {
       return axios.post('http://localhost:3000/graphql', {
         query: `

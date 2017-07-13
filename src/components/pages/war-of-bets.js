@@ -44,7 +44,11 @@ class WarOfBets extends Component {
       selectedOdds: null,
       error: null,
       placingBet: false,
-      hasBet: false
+      hasBet: false,
+      limits: {
+        min: null,
+        max: null
+      }
     }
 
     this._onChange = this._onChange.bind(this)
@@ -54,7 +58,7 @@ class WarOfBets extends Component {
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:7000')
 
-    Api.draw.latestDraw(3).then( response => {
+    Api.draws.latestDraw(3).then( response => {
       console.log('LATEST DRAW', response)
       let { draw } = response.data.data.latestDraw
       if(!this.state.drawNumber) {
@@ -82,6 +86,7 @@ class WarOfBets extends Component {
 
           // RESET DATA 
           this.setState({selectedOdds: null, betInput: 0, hasBet: false})
+          this.setState({limits: Object.assign({}, { min: null, max: null })})    
         } else {
           this.setState({data: Object.assign({}, data) }, function() {
             console.log(this.state.data)
@@ -90,7 +95,7 @@ class WarOfBets extends Component {
     }
 
     // LOGIN USER 1
-    Api.user.get(1).then(response => {
+    Api.users.get(1).then(response => {
       this.setState({user: Object.assign({}, response.data.data.user) }, function() {
         console.log(this.state.user)
       })
@@ -136,7 +141,7 @@ class WarOfBets extends Component {
       amount: self.state.betInput
     }
 
-    Api.bet.create(data).then(response => {
+    Api.bets.create(data).then(response => {
       console.log('PLACE BET RESPONSE', response)
       self.setState({
         placingBet: false, 
@@ -205,7 +210,13 @@ class WarOfBets extends Component {
                   chosenOutcome: 'Dealer Wins',
                   winner: 'dealer'
                 }
+
                 self.setState({selectedOdds: Object.assign({}, bet)})
+                if (odds.dealer.odds >= 10) {
+                  self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
+                } else {
+                  self.setState({limits: Object.assign({}, { min: null, max: null })})
+                }
               }}
             />
             <BetOption 
@@ -223,6 +234,11 @@ class WarOfBets extends Component {
                   winner: 'player'
                 }
                 self.setState({selectedOdds: Object.assign({}, bet)})
+                if (odds.player.odds >= 10) {
+                  self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
+                } else {
+                  self.setState({limits: Object.assign({}, { min: null, max: null })})
+                }
               }}
             />
             <BetOption 
@@ -239,7 +255,12 @@ class WarOfBets extends Component {
                   chosenOutcome: 'War',
                   winner: 'war'
                 }
-                self.setState({selectedOdds: Object.assign({}, bet)})                
+                self.setState({selectedOdds: Object.assign({}, bet)})       
+                if (odds.war.odds >= 10) {
+                  self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
+                }          else {
+                  self.setState({limits: Object.assign({}, { min: null, max: null })})
+                }
               }}
             />
           </BetOptions>
@@ -262,23 +283,49 @@ class WarOfBets extends Component {
 
           { this.renderSelectedOdds() } 
 
+          {
+            !this.state.hasBet && !this.state.selectedOdds ? 
+            <section className="bet-slip-alerts">
+              <div id="empty_cart" style={{display: 'block', marginBottom: 16}}>
+                Your bet slip is empty. Please choose betting option from a list.        
+              </div>
+            </section>
+            :
+            null
+          } 
+
           <section className="capitalized">
             {Translate('Amount')}
           </section>
+
           <BetButtonGroup>
-            <BetButton disabled={false} active={this.state.betInput == 1} title={'1'} onClick={() => {this.SetBet(1)}} />
-            <BetButton disabled={false} active={this.state.betInput == 3} title={'3'} onClick={() => this.SetBet(3)} />
-            <BetButton disabled={false} active={this.state.betInput == 4} title={'5'} onClick={() => this.SetBet(5)} />
-            <BetButton disabled={false} active={this.state.betInput == 10} title={'10'} onClick={() => this.SetBet(10)} />
-            <BetButton disabled={false} active={this.state.betInput == 20} title={'20'} onClick={() => this.SetBet(20)} />
-            <BetButton disabled={false} active={this.state.betInput == 30} title={'30'} onClick={() => this.SetBet(30)} />
-            <BetButton disabled={false} active={this.state.betInput == 50} title={'50'} onClick={() => this.SetBet(50)} />
-            <BetButton disabled={false} active={this.state.betInput == 100} title={'100'} onClick={() => this.SetBet(100)} />
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 1 : false) || (this.state.limits.min ? this.state.limits.min > 1 : false)} active={this.state.betInput == 1} title={'1'} onClick={() => {this.SetBet(1)}} /> 
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 3 : false) || (this.state.limits.min ? this.state.limits.min > 3 : false)} active={this.state.betInput == 3} title={'3'} onClick={() => this.SetBet(3)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 5 : false) || (this.state.limits.min ? this.state.limits.min > 5 : false)} active={this.state.betInput == 4} title={'5'} onClick={() => this.SetBet(5)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 10 : false) || (this.state.limits.min ? this.state.limits.min > 10 : false)} active={this.state.betInput == 10} title={'10'} onClick={() => this.SetBet(10)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 20 : false) || (this.state.limits.min ? this.state.limits.min > 20 : false)} active={this.state.betInput == 20} title={'20'} onClick={() => this.SetBet(20)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 30 : false) || (this.state.limits.min ? this.state.limits.min > 30 : false)} active={this.state.betInput == 30} title={'30'} onClick={() => this.SetBet(30)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 50 : false) || (this.state.limits.min ? this.state.limits.min > 50 : false)} active={this.state.betInput == 50} title={'50'} onClick={() => this.SetBet(50)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 100 : false) || (this.state.limits.min ? this.state.limits.min > 100: false)} active={this.state.betInput == 100} title={'100'} onClick={() => this.SetBet(100)} />
           </BetButtonGroup>
 
           <BetInput value={this.state.betInput} onChange={this._onChange} />
 
-          <p>Maximum Bet: $100.00</p>
+          <p>
+            { 
+              this.state.limits.min ? <span>Min: ${this.state.limits.min.toFixed(2)} </span> : <span></span>
+            }
+            {
+              this.state.limits.max ? <span>Max: ${this.state.limits.max.toFixed(2)} </span> : <span></span>
+            }
+          </p>
 
           {
             this.state.hasBet ?
