@@ -20,7 +20,7 @@ export default class RecentBets extends Component {
               <div className="bet-round">{bet.draw.game.name} / {bet.odd.gamePart.name}</div>
               <div className="bet-description">{bet.odd.outcome.name} &nbsp;
                 <span className="nowrap"></span>
-                <span className="nowrap">( ${bet.amount.toFixed(2)} / {bet.odd.odds} )</span>
+                <span className="nowrap">( ${bet.amount.toFixed(2)} / {bet.odd.odds.toFixed(2)} )</span>
               </div>
               <div className={`bet-status ${(bet.odd.isWinner ? 'won' : 'lost')}`}>{bet.odd.isWinner ? 'won' : 'lost'}</div>
             </div>

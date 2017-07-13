@@ -76,7 +76,7 @@ class WarOfBets extends Component {
       }
     }).then( response => {
       console.log(' CURRENT BETS', response)
-      this.setState({ recentBets: [].concat(response.data.data.user.bets) }, () => {
+      this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
         console.log('recent bets', this.state.recentBets)
       })
     }).catch( err => {
@@ -101,7 +101,7 @@ class WarOfBets extends Component {
 
           Api.users.bets(1, data.data.drawNumber).then( response => {
             console.log(' CURRENT BETS', response)
-            this.setState({ recentBets: [].concat(response.data.data.user.bets) }, () => {
+            this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
               console.log('recent bets', this.state.recentBets)
             })
           }).catch( err => {
