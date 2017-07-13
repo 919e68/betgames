@@ -68,7 +68,6 @@ class Poker extends Component {
 
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:7000')
-
     // GET LATEST DRAW to initialize game
     Api.draws.latestDraw(3).then( response => {
       console.log('LATEST DRAW', response)
@@ -81,7 +80,7 @@ class Poker extends Component {
             war: { id: +draw.latestOdds[2].id, odds: draw.latestOdds[2].odds },
           })})
 
-          return Api.users.bets(1, draw.drawNumber)
+          return Api.users.bets(1, 1)
       }
     }).then( response => {
       console.log(' CURRENT BETS', response)
@@ -95,7 +94,7 @@ class Poker extends Component {
 
     this.socket.onmessage = (message) => {
         let data = JSON.parse(message.data)
-        // console.log(data)
+        console.log('NEW DATA', data)
 
         if(data.type == 'create') {
           console.log(this.state)
@@ -108,10 +107,10 @@ class Poker extends Component {
           this.setState({selectedOdds: null, betInput: 0, hasBet: false})
           this.setState({limits: Object.assign({}, { min: null, max: null })}) 
 
-          Api.users.bets(1, data.data.drawNumber).then( response => {
+          Api.users.bets(1, 1).then( response => {
             console.log(' CURRENT BETS', response)
             this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
-              console.log('recent bets', this.state.recentBets)
+              // console.log('recent bets', this.state.recentBets)
             })
           }).catch( err => {
             console.log(err)
@@ -234,7 +233,7 @@ class Poker extends Component {
               winner={data.data ? data.data.winner == 'dealer' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' || odds.dealer == 'lost' } 
-              betName={Translate('Dealer Wins')} 
+              betName={Translate('Hand 1 Wins')} 
               active={selectedOdds ? selectedOdds.winner == 'dealer' : false}
               odds={!odds.dealer ? null : odds.dealer.odds}
               onClick={() => {
@@ -257,7 +256,7 @@ class Poker extends Component {
               winner={data.data ? data.data.winner == 'player' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' || odds.player == 'lost' } 
-              betName={Translate('Player Wins')} 
+              betName={Translate('Hand 2 Wins')} 
               active={selectedOdds ? selectedOdds.winner == 'player' : false}
               odds={!odds.player ? null : odds.player.odds} 
               onClick={() => {
@@ -280,7 +279,51 @@ class Poker extends Component {
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' || odds.war == 'lost' } 
               active={selectedOdds ? selectedOdds.winner == 'war' : false}
-              betName={Translate('War')} 
+              betName={Translate('Hand 3 Wins')} 
+              odds={!odds.war ? null : odds.war.odds} 
+              onClick={() => {
+                let bet = {
+                  odds: odds.war,
+                  chosenOutcome: 'War',
+                  winner: 'war'
+                }
+                self.setState({selectedOdds: Object.assign({}, bet)})       
+                if (odds.war.odds >= 10) {
+                  self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
+                }          else {
+                  self.setState({limits: Object.assign({}, { min: null, max: null })})
+                }
+              }}
+            />
+            <BetOption 
+              showingWinner={data.type == 'winner'}
+              winner={data.data ? data.data.winner == 'war' : false}
+              loading={data.type == 'waiting' || !self.state.drawNumber} 
+              disabled={data.type == 'winner' || data.type == 'waiting' || odds.war == 'lost' } 
+              active={selectedOdds ? selectedOdds.winner == 'war' : false}
+              betName={Translate('Hand 4 Wins')} 
+              odds={!odds.war ? null : odds.war.odds} 
+              onClick={() => {
+                let bet = {
+                  odds: odds.war,
+                  chosenOutcome: 'War',
+                  winner: 'war'
+                }
+                self.setState({selectedOdds: Object.assign({}, bet)})       
+                if (odds.war.odds >= 10) {
+                  self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
+                }          else {
+                  self.setState({limits: Object.assign({}, { min: null, max: null })})
+                }
+              }}
+            />
+            <BetOption 
+              showingWinner={data.type == 'winner'}
+              winner={data.data ? data.data.winner == 'war' : false}
+              loading={data.type == 'waiting' || !self.state.drawNumber} 
+              disabled={data.type == 'winner' || data.type == 'waiting' || odds.war == 'lost' } 
+              active={selectedOdds ? selectedOdds.winner == 'war' : false}
+              betName={Translate('Hand 5 Wins')} 
               odds={!odds.war ? null : odds.war.odds} 
               onClick={() => {
                 let bet = {

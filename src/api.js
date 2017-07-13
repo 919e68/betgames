@@ -52,7 +52,7 @@ module.exports = {
           query {
             user(id: 1) {
               currentBalance
-              recentBets(gameId: 3) {
+              recentBets(gameId: ${gameId}) {
                 id
                 drawNumber
                 amount
