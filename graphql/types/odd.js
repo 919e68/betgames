@@ -11,6 +11,7 @@ const {
 
 const db = require('../../models/db')
 const Outcome = require('./outcome')
+const GamePart = require('./game-part')
 
 module.exports = {
   Type: new GraphQLObjectType({
@@ -24,6 +25,18 @@ module.exports = {
       },
       gamePartId: {
         type: GraphQLID
+      },
+      gamePart: {
+        type: GamePart.Type,
+        resolve: (odd) => {
+          return new Promise((resolve, reject) => {
+            db.GamePart.findById(odd.gamePartId).then(gamePart => {
+              resolve(gamePart)
+            }).catch(err => {
+              reject(err)
+            })
+          })
+        }
       },
       outcomeId: {
         type: GraphQLID

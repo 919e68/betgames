@@ -21,6 +21,10 @@ module.exports = function(sequelize, DataTypes) {
       type:  DataTypes.FLOAT,
       allowNull: false
     },
+    params: {
+      type:  DataTypes.STRING,
+      allowNull: false
+    },
     isWinner: {
       type:  DataTypes.BOOLEAN,
       allowNull: true,
