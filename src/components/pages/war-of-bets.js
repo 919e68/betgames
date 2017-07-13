@@ -50,24 +50,24 @@ class WarOfBets extends Component {
   }
 
   componentDidMount() {
-    let self = this
-    self.socket = new WebSocket('ws://localhost:7000')
+    // let self = this
+    this.socket = new WebSocket('ws://localhost:7000')
 
-    self.socket.onmessage = function(message) {
+    this.socket.onmessage = (message) => {
         let data = JSON.parse(message.data)
         // console.log(data)
 
         if(data.type == 'create') {
-            self.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber})
-            self.setState({odds: Object.assign({}, data.data.odds)}, function(){
-              // console.log(' ODDS' ,self.state.odds)
+            this.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber})
+            this.setState({odds: Object.assign({}, data.data.odds)}, function(){
+              // console.log(' ODDS' ,this.state.odds)
             })
 
             // RESET DATA 
-            self.setState({selectedOdds: null, betInput: 0})
+            this.setState({selectedOdds: null, betInput: 0})
         } else {
-          self.setState({data: Object.assign({}, data) }, function() {
-            console.log(self.state.data)
+          this.setState({data: Object.assign({}, data) }, function() {
+            console.log(this.state.data)
           })
         }
     }
@@ -84,8 +84,8 @@ class WarOfBets extends Component {
         }
       `
     }).then(response => {
-      self.setState({user: Object.assign({}, response.data.data.user) }, function() {
-        console.log(self.state.user)
+      this.setState({user: Object.assign({}, response.data.data.user) }, function() {
+        console.log(this.state.user)
       })
     })
   }
@@ -180,7 +180,7 @@ class WarOfBets extends Component {
             {
               this.state.gameParts.map( (gamePart, index) => {
                 return (
-                  <GamePart key={index} title={gamePart.title} width={self.state.gamePartId == gamePart.id || index == 0 ? 100 : 0} length={self.state.gameParts.length} />
+                  <GamePart key={index} title={gamePart.title} width={this.state.gamePartId == gamePart.id || index == 0 ? 100 : 0} length={this.state.gameParts.length} />
                 )
               })
             }
