@@ -20,6 +20,7 @@ import BetButtonGroup from '../elements/bet-button-group'
 import BetButton from '../elements/bet-button'
 import PlaceBetButton from '../elements/place-bet-button'
 import BetInput from '../elements/bet-input'
+import RecentBets from '../elements/recent-bets'
 import Api from '../../api'
 
 class WarOfBets extends Component {
@@ -48,7 +49,8 @@ class WarOfBets extends Component {
       limits: {
         min: null,
         max: null
-      }
+      },
+      recentBets: []
     }
 
     this._onChange = this._onChange.bind(this)
@@ -58,6 +60,7 @@ class WarOfBets extends Component {
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:7000')
 
+    // GET LATEST DRAW to initialize game
     Api.draws.latestDraw(3).then( response => {
       console.log('LATEST DRAW', response)
       let { draw } = response.data.data.latestDraw
@@ -68,10 +71,18 @@ class WarOfBets extends Component {
             player: { id: +draw.latestOdds[1].id, odds: draw.latestOdds[1].odds },
             war: { id: +draw.latestOdds[2].id, odds: draw.latestOdds[2].odds },
           })})
+
+          return Api.users.bets(1, draw.drawNumber)
       }
+    }).then( response => {
+      console.log(' CURRENT BETS', response)
+      this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
+        console.log('recent bets', this.state.recentBets)
+      })
     }).catch( err => {
       console.log(err)
     })
+
 
     this.socket.onmessage = (message) => {
         let data = JSON.parse(message.data)
@@ -86,10 +97,20 @@ class WarOfBets extends Component {
 
           // RESET DATA 
           this.setState({selectedOdds: null, betInput: 0, hasBet: false})
-          this.setState({limits: Object.assign({}, { min: null, max: null })})    
+          this.setState({limits: Object.assign({}, { min: null, max: null })}) 
+
+          Api.users.bets(1, data.data.drawNumber).then( response => {
+            console.log(' CURRENT BETS', response)
+            this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
+              console.log('recent bets', this.state.recentBets)
+            })
+          }).catch( err => {
+            console.log(err)
+          })  
+
         } else {
           this.setState({data: Object.assign({}, data) }, function() {
-            console.log(this.state.data)
+            // console.log(this.state.data)
           })
         }
     }
@@ -130,7 +151,10 @@ class WarOfBets extends Component {
     } else if (!this.state.selectedOdds) {
       this.setState({error: 'Please select an option'})
       return
-    } 
+    }  else if(this.state.user.currentBalance < this.state.betInput) {
+      this.setState({error: 'You don\'t have enough balance'})
+      return
+    }
 
     self.setState({placingBet: true})
 
@@ -341,9 +365,8 @@ class WarOfBets extends Component {
 
           <PlaceBetButton onClick={this.placeBet} disabled={!this.state.betInput || !this.state.gamePartId || this.state.placingBet || this.state.hasBet } />
 
-          
-
           </BetSlip>
+          <RecentBets bets={this.state.recentBets} />
       </div>
     )
   }

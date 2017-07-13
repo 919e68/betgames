@@ -39,7 +39,7 @@ export default class Navbar extends Component {
           </ul>
         </div>
         {
-          this.props.user && this.props.user.currentBalance ?
+          this.props.user && typeof this.props.user.currentBalance == 'number' ?
             <div className="well well-sm balance-block">
               Balance: 
               <span className="badge" id="balance">${this.props.user.currentBalance.toFixed(2)}</span>

@@ -45,6 +45,43 @@ module.exports = {
           }
         `
       })
+    },
+    bets: (userId, gameId) => {
+      return axios.post('http://localhost:3000/graphql', {
+        query: `
+          query {
+            user(id: 1) {
+              currentBalance
+              recentBets(gameId: 3) {
+                id
+                drawNumber
+                amount
+                draw {
+                  id
+                  game {
+                    name
+                  }
+                }
+                oddId
+                odd {
+                  id
+                  isWinner
+                  odds
+                  gamePart {
+                    id
+                    name
+                  }
+                  outcomeId
+                  outcome {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+          }
+        `
+      })
     }
   },
 
