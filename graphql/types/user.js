@@ -49,7 +49,7 @@ module.exports = {
               reject('gameId is required')
             }
 
-            db.sequelize.query('SELECT Bets.* FROM Bets INNER JOIN Draws ON Draws.drawNumber = Bets.drawNumber WHERE Bets.userId = :userId AND Draws.gameId = :gameId', { 
+            db.sequelize.query('SELECT Bets.* FROM Bets INNER JOIN Draws ON Draws.drawNumber = Bets.drawNumber WHERE Bets.userId = :userId AND Draws.gameId = :gameId ORDER BY Bets.updatedAt DESC', { 
               replacements: {
                 userId: user.id,
                 gameId: gameId
