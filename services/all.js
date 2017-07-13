@@ -342,7 +342,7 @@ poker.stdout.on('data', function (data) {
                   odds: odds[i].odds
                 }
               } else if (odds[i].outcomeId == 6) {
-                oddsData.hand_5 = {
+                oddsData.hand_6= {
                   id: 6,
                   odds: odds[i].odds
                 }
@@ -478,5 +478,4 @@ poker.stdout.on('data', function (data) {
       wss.broadcast(JSON.stringify(json))
     }
   }
-  
 })
