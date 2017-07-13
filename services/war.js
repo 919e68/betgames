@@ -153,15 +153,6 @@ warOfBets.stdout.on('data', function (data) {
           }
 
           // update losers
-          db.sequelize.query('UPDATE Bets SET Bets.isWinner = 0 FROM Bets INNER JOIN Odds ON Odds.id = Bets.oddId WHERE Odds.outcomeId != :outcomeId AND Bets.drawNumber = :drawNumber', { 
-            replacements: {
-              outcomeId: outcomeId,
-              drawNumber: json.data.drawNumber
-            },
-            type: db.sequelize.QueryTypes.UPDATE,
-            logging: false
-          })
-
           db.sequelize.query('UPDATE Odds SET Odds.isWinner = 0 WHERE Odds.outcomeId != :outcomeId AND Odds.drawNumber = :drawNumber', { 
             replacements: {
               outcomeId: outcomeId,
@@ -206,10 +197,8 @@ warOfBets.stdout.on('data', function (data) {
               (function(i) {
 
                 let computedBalance = bets[i].User.currentBalance + (bets[i].amount * bets[i].Odd.odds)
-
-                bets[i].update({ isWinner: true }, { logging: false })
                 bets[i].User.update({ currentBalance: computedBalance }, { logging: false })
-
+                
               })(i)
             }
 
