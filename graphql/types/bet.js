@@ -3,6 +3,7 @@ const {
   GraphQLInputObjectType,
   GraphQLID, 
   GraphQLString, 
+  GraphQLBoolean,
   GraphQLFloat 
 } = require('graphql')
 

@@ -2,9 +2,11 @@ const {
   GraphQLObjectType,
   GraphQLInputObjectType,
   GraphQLID, 
+  GraphQLInt,
   GraphQLString, 
   GraphQLFloat,
-  GraphQLInt
+  GraphQLBoolean
+  
 } = require('graphql')
 
 const db = require('../../models/db')
@@ -40,6 +42,9 @@ module.exports = {
       },
       odds: {
         type: GraphQLFloat
+      },
+      isWinner: {
+        type: GraphQLBoolean
       },
       createdAt: {
         type: GraphQLString
