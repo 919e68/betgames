@@ -10,9 +10,14 @@ export default class RecentBets extends Component {
     } else {
       return (
         this.props.bets.map( (bet, i) => {
+
+          if(bet.odd.isWinner == null) {
+            return
+          }
+
           return (
             <div className="bet-record" key={i}>
-              <div className="bet-round">{bet.draw.game.name} / {bet.odd.outcome.name}</div>
+              <div className="bet-round">{bet.draw.game.name} / {bet.odd.gamePart.name}</div>
               <div className="bet-description">{bet.odd.outcome.name} &nbsp;
                 <span className="nowrap"></span>
                 <span className="nowrap">( ${bet.amount.toFixed(2)} / {bet.odd.odds} )</span>

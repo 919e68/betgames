@@ -65,8 +65,12 @@ module.exports = {
                 oddId
                 odd {
                   id
-                  odds
                   isWinner
+                  odds
+                  gamePart {
+                    id
+                    name
+                  }
                   outcomeId
                   outcome {
                     id
