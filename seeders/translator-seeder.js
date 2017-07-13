@@ -103,9 +103,28 @@ module.exports = {
       {
         word: 'lost',
         korean: '패'
+      },
+      {
+        word: 'player',
+        korean: '플레이어'
+      },
+      {
+        word: 'banker',
+        korean: '뱅커'
+      },
+      {
+        word: 'tie',
+        korean: '타이'
+      },
+      {
+        word: 'please wait, while the cards will be dealt',
+        korean: '카드가 처리되는 동안 잠시 기다려주십시오'
+      },
+      {
+        word: 'place your bets',
+        korean: '베팅'
       }
     ])
-    
   },
 
   down: function (queryInterface, Sequelize) {

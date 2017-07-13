@@ -33,6 +33,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "service:all": "nodemon services/all.js",
     "service:war": "nodemon services/war.js",
     "service:poker": "nodemon services/poker.js",
     "translate": "node ./scripts/translate",

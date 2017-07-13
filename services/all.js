@@ -15,8 +15,7 @@ wss.broadcast = function broadcast(data) {
 }
 
 let spawn = process.spawn
-let warOfBets = spawn('phantomjs', ['services/poker-phantom.js'])
-
+let warOfBets = spawn('phantomjs', ['services/war-phantom.js'])
 
 warOfBets.stdout.on('data', function (data) {
   let datas = data.toString().split("\r\n")
@@ -33,7 +32,7 @@ warOfBets.stdout.on('data', function (data) {
 
         db.Draw.create({
           drawNumber: json.data.drawNumber,
-          gameId: 1
+          gameId: 3
         }, {
           logging: false
         }).then(draw => {
@@ -72,7 +71,8 @@ warOfBets.stdout.on('data', function (data) {
             where: {
               drawNumber: json.data.drawNumber,
               gamePartId: json.data.gamePartId
-            }
+            },
+            logging: false
           }).then(odds => {
 
             let oddsData = {}
@@ -230,3 +230,12 @@ warOfBets.stdout.on('data', function (data) {
   }
   
 })
+
+
+
+
+
+
+
+// poker
+let poker = spawn('phantomjs', ['services/poker-phantom.js'])

@@ -139,6 +139,7 @@ module.exports = {
         gamePartId: Sequelize.BIGINT,
         outcomeId: Sequelize.BIGINT,
         odds: Sequelize.FLOAT,
+        params: Sequelize.STRING,
         isWinner: {
           type:  Sequelize.BOOLEAN,
           allowNull: true,

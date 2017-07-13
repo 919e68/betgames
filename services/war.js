@@ -17,12 +17,12 @@ wss.broadcast = function broadcast(data) {
 let spawn = process.spawn
 let warOfBets = spawn('phantomjs', ['services/war-phantom.js'])
 
-
 warOfBets.stdout.on('data', function (data) {
   let datas = data.toString().split("\r\n")
 
   for (let i = 0; i < datas.length - 1; i++) {
     let json = JSON.parse(datas[i].toString())
+    json.game = 'war'
 
     if (json.type == 'create') {
 
