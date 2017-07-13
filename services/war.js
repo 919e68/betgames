@@ -37,9 +37,7 @@ warOfBets.stdout.on('data', function (data) {
         }, {
           logging: false
         }).then(draw => {
-
           console.log(`success inserting draw (${json.data.drawNumber})`)
-
         })
 
       } else if (json.table == 'odd') {
@@ -67,7 +65,6 @@ warOfBets.stdout.on('data', function (data) {
           logging: false
         }).then(data => {
 
-          
           db.Odd.findAll({
             where: {
               drawNumber: json.data.drawNumber,

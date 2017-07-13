@@ -105,14 +105,17 @@ module.exports = {
           }
 
           if (errors.length == 0) {
-            db.Bet.create(data, { logging: false }).then(bet => {
+            db.Bet.create(data, { logging: true }).then(bet => {
               if (bet) {
                 db.User.find({
                   where: {
                     id: data.userId
                   }
                 }).then(user => {
-                  user.update({ currentBalance: user.currentBalance - data.amount })
+                  if (user) {
+                    user.update({ currentBalance: (user.currentBalance - data.amount) })
+                  }
+
                   resolve({ bet, errors })
                 }).catch(err => {
                   reject(err)
