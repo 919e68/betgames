@@ -130,7 +130,10 @@ class WarOfBets extends Component {
     } else if (!this.state.selectedOdds) {
       this.setState({error: 'Please select an option'})
       return
-    } 
+    }  else if(this.state.user.currentBalance < this.state.betInput) {
+      this.setState({error: 'You don\'t have enough balance'})
+      return
+    }
 
     self.setState({placingBet: true})
 
