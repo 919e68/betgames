@@ -20,22 +20,12 @@ export default class Navbar extends Component {
       
         <div className="navbar-collapse collapse">
           <ul className="nav nav-pills">
-            <li className="how_to_play">
-              <a href="https://betgames9.betgames.tv/ext/game/how_to_play/testpartner">How to play?</a>
-              <span></span>
-            </li>
-            <li className="dealers">
-              <a href="https://betgames9.betgames.tv/ext/game/dealers/testpartner">Our dealers</a>
-              <span></span>
-            </li>
+
             <li className="bets">
               <a href="/bet-history">Bet History</a>
               <span></span>
             </li>
-            <li className="results">
-              <a href="https://betgames9.betgames.tv/ext/game/results/testpartner">Results</a>
-              <span></span>
-            </li>
+
           </ul>
         </div>
         {

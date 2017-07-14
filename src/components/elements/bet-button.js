@@ -25,18 +25,20 @@ export default class BetButton extends Component {
   }
 
   render() {
-    return ( <
-      button type = "button"
-      className = {
-        'btn btn-default btn-lg pull-left ' + (this.props.active ? 'active' : '') + ' ' + (this.props.disabled ? 'disabled' : '')
-      }
-      onClick = {
-        this.props.onClick
-      } >
-      {
-        this.props.title
-      } <
-      /button>
+    return ( 
+      <button type = "button"
+        className = {
+          'btn btn-default btn-lg pull-left ' + (this.props.active ? 'active' : '') + ' ' + (this.props.disabled ? 'disabled' : '')
+        }
+        onClick = {
+          this.props.onClick
+        } 
+        disabled={this.props.disabled}
+      >
+        {
+          this.props.title
+        } 
+      </button>
     )
   }
 }

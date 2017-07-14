@@ -83,6 +83,45 @@ module.exports = {
           }
         `
       })
+    },
+    betHistory: (userId, gameId, date) => {
+
+      let filter = []
+      if(gameId) {
+        filter.push('gameId: ' + gameId)
+      }
+
+      if(date) {
+        filter.push(`date: ${date}`)
+      }
+      
+      filter = filter.length ? `(${filter.join(', ')})` : ''
+
+      return axios.post('http://localhost:3000/graphql', {
+        query: `
+          query {
+            user (id: ${userId}) {
+              bets ${filter} {
+                amount
+                odd {
+                  isWinner
+                  odds
+                  outcome {
+                    name
+                  }
+                }
+                updatedAt
+                draw {
+                  drawNumber
+                  game {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        `
+      })
     }
   },
 
