@@ -42,6 +42,7 @@ export default class BetHistory extends Component {
           </div>
         </div>
       </div>
+      
     )
   }
 
