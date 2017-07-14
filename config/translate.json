@@ -118,5 +118,9 @@
   "place your bets": {
     "en": "place your bets",
     "ko": "베팅"
+  },
+  "choose betting option": {
+    "en": "choose betting option",
+    "ko": "배팅 종류를 선택해 주세요"
   }
 }
