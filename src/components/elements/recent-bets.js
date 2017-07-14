@@ -10,7 +10,7 @@ export default class RecentBets extends Component {
     } else {
       return (
         this.props.bets.map( (bet, i) => {
-          
+
           if(!bet.odd) {
             return
           }
@@ -48,7 +48,7 @@ export default class RecentBets extends Component {
 
        </section>
         <section className="recent-bets-actions">
-          <a href="/history">
+          <a href="/bet-history">
           Bet history</a>
         </section>
       </aside>    

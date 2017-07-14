@@ -29,7 +29,7 @@ export default class Navbar extends Component {
               <span></span>
             </li>
             <li className="bets">
-              <a href="https://betgames9.betgames.tv/ext/game/bets/testpartner">Bet History</a>
+              <a href="/bet-history">Bet History</a>
               <span></span>
             </li>
             <li className="results">
