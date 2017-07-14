@@ -38,7 +38,10 @@ export default class Results extends Component {
     let gameId = this.state.game
     let drawNumber = this.refs.drawNumber.value
 
-    
+    Api.draws.get(gameId, drawNumber).then(response => {
+      console.log(response)
+      this.setState({draws: [].concat(response.data.data.draws)})
+    })
 
   }
 

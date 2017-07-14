@@ -30,11 +30,23 @@ module.exports = {
         `
       })
     },
-    get: () => {
+    get: (gameId, drawNumber) => {
+      let filter = []
+
+      if(gameId) {
+        filter.push(`gameId: ${gameId}`)
+      }
+
+      if(drawNumber) {
+        filter.push(`drawNumber: "${drawNumber}"`)
+      }
+
+      filter = filter.length ? `(${filter.join(', ')})` : ''
+
       return axios.post('http://localhost:3000/graphql', {
         query: `
           query {
-            draws {
+            draws ${filter} {
               id
               drawNumber
               winningCards {
