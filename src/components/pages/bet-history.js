@@ -9,6 +9,7 @@ export default class BetHistory extends Component {
 
   render() {
     return (
+      <div></div>
     )
   }
 

@@ -39,21 +39,35 @@ module.exports = {
           gameId: {
             name: 'gameId',
             type: GraphQLInt
+          },
+          date: {
+            name: 'date',
+            type: GraphQLString
           }
         },
-        resolve: (user, { gameId }) => {
+        resolve: (user, { gameId, date }) => {
           return new Promise((resolve, reject) => {
             let drawWhere = {}  
 
-            if (!gameId) {
-              reject('gameId is required')
+            let sql = 'SELECT Bets.* FROM Bets INNER JOIN Draws ON Draws.drawNumber = Bets.drawNumber WHERE Bets.userId = :userId'
+            let replacements = {
+              userId: user.id
             }
 
-            db.sequelize.query('SELECT Bets.* FROM Bets INNER JOIN Draws ON Draws.drawNumber = Bets.drawNumber WHERE Bets.userId = :userId AND Draws.gameId = :gameId ORDER BY Bets.updatedAt DESC', { 
-              replacements: {
-                userId: user.id,
-                gameId: gameId
-              },
+
+            if (gameId) {
+              sql += ' AND Draws.gameId = :gameId'
+              replacements.gameId = gameId
+            }
+
+            if (date) {
+              sql += ` AND Bets.updatedAt >= :startDate AND Bets.updatedAt <= :endDate`
+              replacements.startDate = `${date} 00:00:00`
+              replacements.endDate = `${date} 23:59:59`
+            }
+
+            db.sequelize.query(sql, { 
+              replacements: replacements,
               model: db.Bet 
             }).then(bets => {
               resolve(bets)
