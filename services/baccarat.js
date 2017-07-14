@@ -3,7 +3,7 @@ const zlib = require('zlib')
 const db = require('../models/db')
 const WebSocket = require('ws')
 
-const wss = new WebSocket.Server({ port: 7000 })
+const wss = new WebSocket.Server({ port: 7000 }) 
  
 // Broadcast to all. 
 wss.broadcast = function broadcast(data) {
@@ -15,14 +15,14 @@ wss.broadcast = function broadcast(data) {
 }
 
 let spawn = process.spawn
+let baccarat = spawn('phantomjs', ['services/baccarat-phantom.js'])
 
-let war = spawn('phantomjs', ['services/war-phantom.js'])
-war.stdout.on('data', function (data) {
+baccarat.stdout.on('data', function (data) {
   let datas = data.toString().split("\r\n")
 
   for (let i = 0; i < datas.length - 1; i++) {
     let json = JSON.parse(datas[i].toString())
-    json.game = 'war'
+    json.game = 'baccarat'
 
     if (json.type == 'create') {
 
@@ -33,7 +33,7 @@ war.stdout.on('data', function (data) {
 
         db.Draw.create({
           drawNumber: json.data.drawNumber,
-          gameId: 3
+          gameId: 1
         }, {
           logging: false
         }).then(draw => {
@@ -42,24 +42,26 @@ war.stdout.on('data', function (data) {
 
       } else if (json.table == 'odd') {
 
+        console.log(JSON.stringify(json, null, 2))
+
         db.Odd.bulkCreate([
           {
             drawNumber: json.data.drawNumber,
             gamePartId: json.data.gamePartId,
-            outcomeId: 10,
-            odds: !isNaN(json.data.odds.dealer) ? json.data.odds.dealer : null
+            outcomeId: 7,
+            odds: !isNaN(json.data.odds.player.odds) ? json.data.odds.player.odds : null
           },
           {
             drawNumber: json.data.drawNumber,
             gamePartId: json.data.gamePartId,
-            outcomeId: 11,
-            odds: !isNaN(json.data.odds.player) ? json.data.odds.player : null
+            outcomeId: 8,
+            odds: !isNaN(json.data.odds.banker.odds) ? json.data.odds.banker.odds : null
           },
           {
             drawNumber: json.data.drawNumber,
             gamePartId: json.data.gamePartId,
-            outcomeId: 12,
-            odds: !isNaN(json.data.odds.war) ? json.data.odds.war : null
+            outcomeId: 9,
+            odds: !isNaN(json.data.odds.tie.odds) ? json.data.odds.tie.odds : null
           }
         ], {
           logging: false
@@ -76,20 +78,20 @@ war.stdout.on('data', function (data) {
             let oddsData = {}
 
             for (let i = 0; i < odds.length; i++) {
-              if (odds[i].outcomeId == 10) {
-                oddsData.dealer = {
-                  id: odds[i].id,
-                  odds: odds[i].odds
-                }
-
-              } else if (odds[i].outcomeId == 11) {
+              if (odds[i].outcomeId == 7) {
                 oddsData.player = {
                   id: odds[i].id,
                   odds: odds[i].odds
                 }
 
-              } else if (odds[i].outcomeId == 12) {
-                oddsData.war = {
+              } else if (odds[i].outcomeId == 8) {
+                oddsData.banker = {
+                  id: odds[i].id,
+                  odds: odds[i].odds
+                }
+
+              } else if (odds[i].outcomeId == 9) {
+                oddsData.tie = {
                   id: odds[i].id,
                   odds: odds[i].odds
                 }
@@ -101,7 +103,8 @@ war.stdout.on('data', function (data) {
             wss.broadcast(JSON.stringify({
               type: 'create',
               table: 'odd',
-              game: 'war',
+              game: 'poker',
+              test: true,
               data: {
                 drawNumber: json.data.drawNumber,
                 gamePartId: json.data.gamePartId,
@@ -109,12 +112,11 @@ war.stdout.on('data', function (data) {
               }
             }))
 
+          }).catch(err => {
+            console.log(err)
           })
-
         }).catch(err => {
-
           console.log(err)
-
         })
       }
 
@@ -141,17 +143,15 @@ war.stdout.on('data', function (data) {
 
 
           // update winner and loser odds
-          let outcomeId = null
-
-          if (json.data.winner == 'dealer') {
-            outcomeId = 10
-
-          } else if (json.data.winner == 'player') {
-            outcomeId = 11
-
-          } else if (json.data.winner == 'war') {
-            outcomeId = 12
+          let winningOutcomeId = {
+            player: 7,
+            banker: 8,
+            tie: 9
           }
+
+          let outcomeId = winningOutcomeId[json.data.winner]
+
+          console.log(json.data.winner)
 
           // update losers
           db.sequelize.query('UPDATE Odds SET Odds.isWinner = 0 WHERE Odds.outcomeId != :outcomeId AND Odds.drawNumber = :drawNumber', { 
@@ -205,12 +205,8 @@ war.stdout.on('data', function (data) {
 
           })
         }
-
-
       }).catch(err => {
-
         console.log(err)
-
       })
 
     } else {
@@ -219,5 +215,4 @@ war.stdout.on('data', function (data) {
       wss.broadcast(JSON.stringify(json))
     }
   }
-  
 })

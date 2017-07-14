@@ -3,19 +3,6 @@ const zlib = require('zlib')
 const db = require('../models/db')
 const WebSocket = require('ws')
 
-db.Draw.destroy({
-  where: {},
-  truncate: true
-})
-db.Odd.destroy({
-  where: {},
-  truncate: true
-})
-db.Bet.destroy({
-  where: {},
-  truncate: true
-})
-
 const wss = new WebSocket.Server({ port: 7000 }) 
  
 // Broadcast to all. 

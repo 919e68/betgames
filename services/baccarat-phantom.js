@@ -63,37 +63,26 @@ if (address) {
         return symbol
       }
 
-      function getHandParams(el) {
-        var cardParamsEl = el.querySelectorAll('div.card')
+      function getWinnerCards(el) {
+        var cardParamsEl = el.querySelectorAll('span.card')
+        var result = []
 
-        if (cardParamsEl.length == 2) {
-          var firstCard = {
-            number: Cards[cardParamsEl[0].innerHTML.split('<span')[0].trim()],
-            symbol: getCardSymbol(cardParamsEl[0].innerHTML.split('<span')[1])
-          }
-
-          var secondCard = {
-            number: Cards[cardParamsEl[1].innerHTML.split('<span')[0].trim()],
-            symbol: getCardSymbol(cardParamsEl[1].innerHTML.split('<span')[1])
-          }
-
-          return {
-            params1: firstCard,
-            params2: secondCard
-          }
-        } else {
-          return {
-            params1: null,
-            params2: null
+        if (cardParamsEl.length > 0) {
+          for (var i = 0; i < cardParamsEl.length; i++) {
+            result.push({
+              number: Cards[cardParamsEl[i].innerHTML.split('<span')[0].trim()],
+              symbol: getCardSymbol(cardParamsEl[i].innerHTML.split('<span')[1])
+            })
           }
         }
+
+        return result
       }
 
       setInterval(function() {
         var drawIdEl = document.getElementById('alert_top_code')
         var progressEl = document.querySelectorAll('#lottery_6 .game-progress-bar div.progress-bar')
-        var oddsEl = document.querySelectorAll('#lottery_6 #group_32 > div.panel-body > div.list-group > a > span.badge')
-        var oddsParamsEl = document.querySelectorAll('#lottery_6 #group_32 > div.panel-body > div.list-group > a > span.odd-name')
+        var oddsEl = document.querySelectorAll('#lottery_6 #group_35 > div.panel-body > div.list-group > a > span.badge')
         var msgTxtEl = document.querySelectorAll('#lottery_6 div#message-text')
 
         // get draw number
@@ -113,99 +102,87 @@ if (address) {
           hasWinner = false
 
           if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '0px' && progressEl[2].style.width == '0px') {
-            gamePartId = 1
+            gamePartId = 6
 
           } else if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '100%' && progressEl[2].style.width == '0px') {
-            gamePartId = 2
+            gamePartId = 7
 
           } else if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '100%' && progressEl[2].style.width == '100%') {
-            gamePartId = 3
+            gamePartId = 8
 
-          } else if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '100%' && progressEl[2].style.width == '100%' && progressEl[3].style.width == '100%' && progressEl[4].style.width == '0px') {
-            gamePartId = 4
-
-          } else if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '100%' && progressEl[2].style.width == '100%' && progressEl[3].style.width == '100%' && progressEl[4].style.width == '100%') {
-            gamePartId = 5
           }
 
-          // if (drawNumber && gamePartId) {
-          //   var currentDraw = drawNumber + '-' + gamePartId
+          if (drawNumber && gamePartId) {
+            var currentDraw = drawNumber + '-' + gamePartId
 
-          //   if (!gameSaved) {
-          //     gameSaved = true
-          //     var drawData = {
-          //       type: 'create',
-          //       table: 'draw',
-          //       data: {
-          //         drawNumber: drawNumber,
-          //         gamePartId: gamePartId
-          //       }
-          //     }
+            if (!gameSaved) {
+              gameSaved = true
+              var drawData = {
+                type: 'create',
+                table: 'draw',
+                data: {
+                  drawNumber: drawNumber,
+                  gamePartId: gamePartId
+                }
+              }
 
-          //     send(drawData)
-          //   }
+              send(drawData)
+            }
 
-          //   if (currentDraw != lastDraw) {
-          //     lastDraw = currentDraw
+            if (currentDraw != lastDraw) {
+              lastDraw = currentDraw
 
-          //     var odds = {
-          //       hand_1: {},
-          //       hand_2:  {},
-          //       hand_3:  {},
-          //       hand_4:  {},
-          //       hand_5:  {},
-          //       hand_6:  {}
-          //     }
+              var odds = {
+                player: {},
+                banker:  {},
+                tie:  {},
+              }
 
-          //     // get odds
-          //     var oddProp = ['hand_1', 'hand_2', 'hand_3', 'hand_4', 'hand_5', 'hand_6']
-          //     for (var i = 0; i < 6; i++) {
-          //       var params = getHandParams(oddsParamsEl[i])
-          //       odds[oddProp[i]].params1 = params.params1
-          //       odds[oddProp[i]].params2 = params.params2
+              // get odds
+              var oddProp = ['player', 'banker', 'tie']
+              for (var i = 0; i < 3; i++) {
+                if (!isNaN(oddsEl[i].innerHTML.trim())) {
+                  odds[oddProp[i]].odds = parseFloat(oddsEl[i].innerHTML.trim())
 
-          //       if (!isNaN(oddsEl[i].innerHTML.trim())) {
-          //         odds[oddProp[i]].odds = parseFloat(oddsEl[i].innerHTML.trim())
+                } else if (oddsEl[i].innerHTML.trim().indexOf('<img') !== -1) {
+                  odds[oddProp[i]].odds = 'loading'
 
-          //       } else if (oddsEl[i].innerHTML.trim().indexOf('<img') !== -1) {
-          //         odds[oddProp[i]].odds = 'loading'
-
-          //       } else {
-          //         odds[oddProp[i]].odds = oddsEl[i].innerHTML.trim()
-          //       }
-          //     }
+                } else {
+                  odds[oddProp[i]].odds = oddsEl[i].innerHTML.trim()
+                }
+              }
 
 
-          //     var data = {
-          //       type: 'create',
-          //       table: 'odd',
-          //       data: {
-          //         drawNumber: drawNumber,
-          //         gamePartId: gamePartId,
-          //         odds: odds
-          //       }
-          //     }
+              var data = {
+                type: 'create',
+                table: 'odd',
+                data: {
+                  drawNumber: drawNumber,
+                  gamePartId: gamePartId,
+                  odds: odds
+                }
+              }
 
-          //     send(data)
-          //   }
+              send(data)
+            }
 
-          //   // countdown
-          //   var countDownEl = document.querySelectorAll('#lottery_6 #countdown_bet > span.countdown_row')
-          //   if (countDownEl.length > 0) {
-          //     var countdown = countDownEl[0].innerHTML.trim()
+            // countdown
+            var countDownEl = document.querySelectorAll('#lottery_6 #countdown_bet > span.countdown_row')
+            if (countDownEl.length > 0) {
+              var countdown = countDownEl[0].innerHTML.trim()
 
-          //     if (countdown != lastCountdown) {
-          //       lastCountdown = countdown
+              if (countdown != lastCountdown) {
+                lastCountdown = countdown
 
-          //       var data = {
-          //         type: 'countdown',
-          //         timer: countdown
-          //       }
+                var data = {
+                  type: 'countdown',
+                  timer: countdown
+                }
 
-          //       send(data)
-          //     }
-          //   }
-          // }
+                send(data)
+              }
+            }
+          }
 
         // for waiting
         } else if (msgTxt.indexOf('Please wait') !== -1) {
@@ -226,38 +203,47 @@ if (address) {
         } else if (msgTxt.indexOf('<div id="results-winner-cards">') !== -1) {
           isWaiting = false
           var winner = null
+          var winningNumber = []
+          var winningSymbol = []
           var params = {}
 
+          var winnerEl = document.querySelectorAll('#lottery_6 div#message-text > #results-winner-cards > span.web-winner-cards')
 
-          var winnerEl = document.querySelectorAll('#lottery_6 div#message-text > #results-winner-cards > span.results-player-cards')
+          if (!hasWinner && winnerEl.length > 0) {
+            hasWinner = true
+            gameSaved = false
 
-          // if (!hasWinner && winnerEl.length > 0) {
-          //   hasWinner = true
-          //   gameSaved = false
+            // get odds
+            var oddProp = ['player', 'banker', 'tie']
+            for (var i = 0; i < 3; i++) {
+              if (oddsEl[i].innerHTML.trim() == 'won') {
+                winner = oddProp[i]
+                break
+              }
+            }
 
-          //   // get odds
-          //   var oddProp = ['hand_1', 'hand_2', 'hand_3', 'hand_4', 'hand_5', 'hand_6']
-          //   for (var i = 0; i < 6; i++) {
-          //     if (oddsEl[i].innerHTML.trim() == 'won') {
-          //       params = getHandParams(oddsParamsEl[i])
-          //       winner = oddProp[i]
-          //       break
-          //     }
-          //   }
+            var winningCards = getWinnerCards(winnerEl[0])
+            var winningTotal = winnerEl[0].innerHTML.trim().substr(-3).substr(1, 1)
 
+            for (var i = 0; i < winningCards.length; i++) {
+              winningNumber.push(winningCards[i].number)
+              winningSymbol.push(winningCards[i].symbol)
+            }
 
-          //   var data = {
-          //     type: 'winner',
-          //     data: {
-          //       drawNumber: drawNumber,
-          //       winner: winner,
-          //       winningNumber: params.params1.number + '-' + params.params2.number,
-          //       winningSymbol: params.params1.symbol + '-' + params.params2.symbol
-          //     }
-          //   }
+            winningNumber.push(winningTotal)
 
-          //   send(data)
-          // }
+            var data = {
+              type: 'winner',
+              data: {
+                drawNumber: drawNumber,
+                winner: winner,
+                winningNumber: winningNumber.join('-'),
+                winningSymbol: winningSymbol.join('-')
+              }
+            }
+
+            send(data)
+          }
         }
       }, 100)
 

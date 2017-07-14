@@ -36,7 +36,9 @@
     "service:all": "nodemon services/all.js",
     "service:war": "nodemon services/war.js",
     "service:poker": "nodemon services/poker.js",
+    "service:baccarat": "nodemon services/baccarat.js",
     "translate": "node ./scripts/translate",
+    "clean:db": "node ./scripts/clean-db",
     "test": "node test/index.js"
   }
 }
