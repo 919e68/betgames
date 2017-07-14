@@ -99,7 +99,7 @@ class Poker extends Component {
         }
 
         if(data.type == 'winner') {
-          Api.users.bets(1, 1).then( response => {
+          Api.users.bets(1, 2).then( response => {
             console.log(' CURRENT BETS', response)
             this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
               // console.log('recent bets', this.state.recentBets)
@@ -121,7 +121,7 @@ class Poker extends Component {
           this.setState({selectedOdds: null, betInput: 0, hasBet: false})
           this.setState({limits: Object.assign({}, { min: null, max: null })}) 
 
-          Api.users.bets(1, 1).then( response => {
+          Api.users.bets(1, 2).then( response => {
             console.log(' CURRENT BETS', response)
             this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
               // console.log('recent bets', this.state.recentBets)
@@ -226,7 +226,7 @@ class Poker extends Component {
       <div>
         <Navbar user={this.state.user} />
         <GameMenu activeGame="baccarat"/>
-        <Stream url="http://localhost:3000/streams/poker.html" />
+        <Stream url="http://localhost:3000/streams/baccarat.html" />
 
         <BetOptionsContainer>
           <GameParts>
