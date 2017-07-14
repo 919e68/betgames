@@ -103,7 +103,7 @@ baccarat.stdout.on('data', function (data) {
             wss.broadcast(JSON.stringify({
               type: 'create',
               table: 'odd',
-              game: 'poker',
+              game: 'baccarat',
               test: true,
               data: {
                 drawNumber: json.data.drawNumber,

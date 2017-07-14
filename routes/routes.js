@@ -3,7 +3,6 @@ const router = express.Router()
 const db = require('../models/db')
 
 router.get('*', (req, res) => {
-  
   console.log('SESSION ID', req.session.id)
   res.render('layout/main')
 })

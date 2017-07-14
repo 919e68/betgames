@@ -26,7 +26,6 @@ war.stdout.on('data', function (data) {
 
     if (json.type == 'create') {
 
-
       // draw table
       if (json.table == 'draw') {
         console.log(`insert on draw table`)
