@@ -123,6 +123,10 @@ module.exports = {
       {
         word: 'place your bets',
         korean: '베팅'
+      },
+      {
+        word: 'choose betting option',
+        korean: '배팅 종류를 선택해 주세요'
       }
     ])
   },

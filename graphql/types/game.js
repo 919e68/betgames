@@ -17,6 +17,9 @@ module.exports = {
       name: {
         type: GraphQLString
       },
+      code: {
+        type: GraphQLString
+      },
       description: {
         type: GraphQLString
       },
