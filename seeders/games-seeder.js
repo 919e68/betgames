@@ -6,15 +6,18 @@ module.exports = {
     return queryInterface.bulkInsert('Games', [
       {
         id: 1,
-        name: 'Bet on Poker'
+        name: 'Bet on Poker',
+        code: 'poker'
       },
       {
         id: 2,
-        name: 'Baccarat'
+        name: 'Baccarat',
+        code: 'baccarat'
       },
       {
         id: 3,
-        name: 'War of Bets'
+        name: 'War of Bets',
+        code: 'war'
       }
     ])
 
