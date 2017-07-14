@@ -16,7 +16,7 @@ db.Bet.destroy({
   truncate: true
 })
 
-const wss = new WebSocket.Server({ port: 7000 })
+const wss = new WebSocket.Server({ port: 7000 }) 
  
 // Broadcast to all. 
 wss.broadcast = function broadcast(data) {

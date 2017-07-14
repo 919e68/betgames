@@ -115,10 +115,10 @@ if (address) {
           if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '0px' && progressEl[2].style.width == '0px') {
             gamePartId = 1
 
-          } else if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '100%' && progressEl[2].style.width == '0px' && progressEl[3].style.width == '0px' && progressEl[4].style.width == '0px') {
+          } else if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '100%' && progressEl[2].style.width == '0px') {
             gamePartId = 2
 
-          } else if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '100%' && progressEl[2].style.width == '100%' && progressEl[3].style.width == '0px' && progressEl[4].style.width == '0px') {
+          } else if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '100%' && progressEl[2].style.width == '100%') {
             gamePartId = 3
 
           } else if (progressEl[0].style.width == '100%' && progressEl[1].style.width == '100%' && progressEl[2].style.width == '100%' && progressEl[3].style.width == '100%' && progressEl[4].style.width == '0px') {
