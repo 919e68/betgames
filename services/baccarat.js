@@ -15,8 +15,8 @@ wss.broadcast = function broadcast(data) {
 }
 
 let spawn = process.spawn
-let baccarat = spawn('phantomjs', ['services/baccarat-phantom.js'])
 
+let baccarat = spawn('phantomjs', ['services/baccarat-phantom.js'])
 baccarat.stdout.on('data', function (data) {
   let datas = data.toString().split("\r\n")
 

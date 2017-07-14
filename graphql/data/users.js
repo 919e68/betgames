@@ -40,6 +40,9 @@ module.exports = {
         }
       },
       resolve: (root, { id }, { session }) => {
+        session.userId = 1
+        console.log(JSON.stringify(session, null, 2))
+
         return new Promise((resolve, reject) => {
           db.User.findOne({
             where: {
