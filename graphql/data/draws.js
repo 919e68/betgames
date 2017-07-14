@@ -43,9 +43,10 @@ module.exports = {
           }
 
           if (date) {
+            console.log(moment(date).startOf('day').utc().format('YYYY-MM-DD HH:mm:ss'), moment(date).endOf('day').utc().format('YYYY-MM-DD HH:mm:ss'))
             where.updatedAt = {
-              $gte: moment().utc(`${date} 00:00`),
-              $lte: moment().utc(`${date} 59:59`)
+              $gte: moment(date).startOf('day'),
+              $lte: moment(date).endOf('day')
             }
           }
 
