@@ -22,9 +22,11 @@ app.use(session(sessionConfig))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static('public'))
+app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
+
 
 app.use('/graphql', graphQLHTTP(req => ({ 
   schema: schema, 

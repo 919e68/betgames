@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import DatePicker from 'react-bootstrap-date-picker'
 
 export default class Calendar extends Component {
   render() {

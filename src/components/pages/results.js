@@ -7,6 +7,8 @@ import Api from '../../api'
 import Navbar from '../elements/navbar'
 import GameMenu from '../blocks/game-menu'
 import moment from 'moment'
+import { Button } from 'react-bootstrap'
+import DatePicker from 'react-bootstrap-date-picker'
 
 export default class Results extends Component {
 
@@ -14,8 +16,12 @@ export default class Results extends Component {
     super(props)
 
     this.state = {
-      draws: []
+      draws: [],
+      game: 0
     }
+
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChange = this.handleChange.bind(this)
   }
 
   componentWillMount() {
@@ -23,6 +29,21 @@ export default class Results extends Component {
       console.log(response)
       this.setState({draws: [].concat(response.data.data.draws)})
     })
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+    
+    let date = moment(this.refs.date.getValue()).format('YYYY-MM-DD')
+    let gameId = this.state.game
+    let drawNumber = this.refs.drawNumber.value
+
+    
+
+  }
+
+  handleChange(e) {
+    this.setState({game: e.target.value})
   }
 
   render() {
@@ -33,29 +54,22 @@ export default class Results extends Component {
         <GameMenu />
         
         <div className="container">
-          <section className="filter">
-            <form className="form-inline">
+          <section className="filter" style={{paddingTop: 20, paddingBottom: 20}}>
+            <form className="form-inline" onSubmit={this.handleSubmit}>
+              <DatePicker ref="date" />
               <div className="form-group">
-                <div className="input-group date" id="datepicker">
-                  <input type="text" className="form-control"/>
-                  <span className="input-group-addon">
-                    <span className="glyphicon glyphicon-calendar"></span>
-                  </span>
-                </div>
-              </div>
-              <div className="form-group">
-                <select id="current_game" className="form-control">
+                <select id="current_game" className="form-control" value={this.state.game} onChange={this.handleChange}>
                   <option value="0">All games</option>
-                  <option value="5">Bet On Poker</option>
-                  <option value="6">Baccarat</option>
-                  <option value="8">War of Bets</option>
+                  <option value="1">Bet On Poker</option>
+                  <option value="2">Baccarat</option>
+                  <option value="3">War of Bets</option>
                 </select> 
               </div>
               <div className="form-group">
-                <input type="text" id="code" maxLength="11" placeholder="Draw no." className="form-control" />
+                <input ref="drawNumber" type="text" id="code" maxLength="11" placeholder="Draw no." className="form-control" />
               </div>
               <div className="form-group">
-                <button type="button" className="btn filter-button">Filter</button>
+                <button type="submit" className="btn filter-button">Filter</button>
               </div>
             </form>
           </section>
