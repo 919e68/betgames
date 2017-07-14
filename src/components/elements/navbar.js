@@ -26,6 +26,11 @@ export default class Navbar extends Component {
               <span></span>
             </li>
 
+            <li className="bets">
+              <a href="/results">Results</a>
+              <span></span>
+            </li>
+
           </ul>
         </div>
         {

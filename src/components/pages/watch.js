@@ -39,7 +39,7 @@ export default class Watch extends Component {
         <div className="container" style={{paddingTop: 40, textAlign: 'center'}}>
           <video src={`https://video.betgames.tv/stream${game}/170714/${this.props.match.params.drawNumber}.mp4`} className="fp-engine " autoPlay="true" preload="true" ></video>
           <br />
-          <Link to="/bet-history">Back to Bet History </Link>
+          <Link to="/results">Back to Results </Link>
         </div>
       </div>
 

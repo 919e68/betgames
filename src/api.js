@@ -29,8 +29,25 @@ module.exports = {
           }
         `
       })
-
     },
+    get: () => {
+      return axios.post('http://localhost:3000/graphql', {
+        query: `
+          query {
+            draws {
+              id
+              drawNumber
+              winner
+              winningSymbol
+              winningNumber
+              game {
+                name
+              }
+            }
+          }
+        `
+      })
+    }
   },
 
   users: {

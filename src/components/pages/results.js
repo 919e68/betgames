@@ -8,24 +8,25 @@ import Navbar from '../elements/navbar'
 import GameMenu from '../blocks/game-menu'
 import moment from 'moment'
 
-export default class BetHistory extends Component {
+export default class Results extends Component {
 
   constructor(props) {
     super(props)
 
     this.state = {
-      bets: []
+      draws: []
     }
   }
 
   componentWillMount() {
-    Api.users.betHistory(1).then(response => {
+    Api.draws.get().then(response => {
       console.log(response)
-      this.setState({bets: [].concat(response.data.data.user.bets)})
+      this.setState({draws: [].concat(response.data.data.draws)})
     })
   }
 
   render() {
+
     return (
       <div>
         <Navbar />
@@ -38,27 +39,21 @@ export default class BetHistory extends Component {
             <table className="table table-striped bets rt-responsive-table-0 rt-responsive-table">
                 <thead>
                   <tr>
-                    <th>Date</th>
+                    <th>Draw</th>
                     <th>Game</th>
-                    <th>DRAW</th>
-                    <th>Bet</th>
-                    <th>Odd</th>
-                    <th className="result-column">RESULT</th>
-                    <th>Amount</th>
+                    <th>Result</th>
+                    <th>Watch</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
-                    this.state.bets.map( (bet, index) => {
+                    this.state.draws.map( (draw, index) => {
                       return (
                         <tr key={index}>
-                          <td>{moment(bet.updatedAt).format('YYYY-MM-DD hh:mm:ss')}</td>
-                          <td>{bet.draw.game.name}</td>
-                          <td>{bet.draw.drawNumber} </td>
-                          <td>{bet.odd.outcome.name}</td>
-                          <td>{bet.odd.odds.toFixed(2)}</td>
-                          <td>{bet.odd.isWinner ? 'Won' : 'Lost'}</td>
-                          <td>${bet.amount.toFixed(2)}</td>
+                          <td>{draw.drawNumber} </td>
+                          <td>{draw.game.name}</td>
+                          <td>{draw.winner}</td>
+                          <td><Link to={`/watch/${draw.game.name}/${draw.drawNumber}`} >Watch</Link></td>
                         </tr>
                       )
                     })
@@ -67,6 +62,7 @@ export default class BetHistory extends Component {
             </table>
           </div>
         </div>
+
       </div>
 
     )
