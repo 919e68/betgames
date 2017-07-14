@@ -43,7 +43,7 @@ module.exports = {
           }
 
           if (date) {
-            where.date = {
+            where.updatedAt = {
               $gte: moment().utc(`${date} 00:00`),
               $lte: moment().utc(`${date} 59:59`)
             }
