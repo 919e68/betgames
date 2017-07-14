@@ -37,7 +37,7 @@ module.exports = {
             draws {
               id
               drawNumber
-              winner
+              winnerFormatted
               winningSymbol
               winningNumber
               game {

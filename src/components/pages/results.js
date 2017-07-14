@@ -31,8 +31,34 @@ export default class Results extends Component {
       <div>
         <Navbar />
         <GameMenu />
-
+        
         <div className="container">
+          <section className="filter">
+            <form className="form-inline">
+              <div className="form-group">
+                <div className="input-group date" id="datepicker">
+                  <input type="text" className="form-control"/>
+                  <span className="input-group-addon">
+                    <span className="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+              <div className="form-group">
+                <select id="current_game" className="form-control">
+                  <option value="0">All games</option>
+                  <option value="5">Bet On Poker</option>
+                  <option value="6">Baccarat</option>
+                  <option value="8">War of Bets</option>
+                </select> 
+              </div>
+              <div className="form-group">
+                <input type="text" id="code" maxLength="11" placeholder="Draw no." className="form-control" />
+              </div>
+              <div className="form-group">
+                <button type="button" className="btn filter-button">Filter</button>
+              </div>
+            </form>
+          </section>
           <div id="table">
             <header>
             </header>
@@ -52,7 +78,7 @@ export default class Results extends Component {
                         <tr key={index}>
                           <td>{draw.drawNumber} </td>
                           <td>{draw.game.name}</td>
-                          <td>{draw.winner}</td>
+                          <td>{draw.winnerFormatted}</td>
                           <td><Link to={`/watch/${draw.game.name}/${draw.drawNumber}`} >Watch</Link></td>
                         </tr>
                       )
