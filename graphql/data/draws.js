@@ -2,10 +2,11 @@ const {
   GraphQLObjectType,
   GraphQLID,
   GraphQLInt,
+  GraphQLString,
   GraphQLList,
   GraphQLNonNull
-  
 } = require('graphql')
+const moment = require('moment')
 
 const db = require('../../models/db')
 const Error = require('../types/error')
@@ -15,14 +16,45 @@ module.exports = {
   Query: {
     draws: {
       type: new GraphQLList(Draw.Type),
-      resolve: () => {
+      args: {
+        gameId: {
+          name: 'gameId',
+          type: GraphQLInt
+        },
+        date: {
+          name: 'date',
+          type: GraphQLString
+        },
+        drawNumber: {
+          name: 'drawNumber',
+          type: GraphQLString
+        }
+      },
+      resolve: (root, { gameId, date, drawNumber }) => {
         return new Promise((resolve, reject) => {
+          let where = {
+            winner: {
+              $ne: null
+            }
+          }
+
+          if (gameId) {
+            where.gameId = gameId
+          }
+
+          if (date) {
+            where.date = {
+              $gte: moment().utc(`${date} 00:00`),
+              $lte: moment().utc(`${date} 59:59`)
+            }
+          }
+
+          if (drawNumber) {
+            where.drawNumber = drawNumber
+          }
+
           db.Draw.findAll({
-            where: {
-              winner: {
-                $ne: null
-              }
-            },
+            where: where,
             order: [
               ['id', 'DESC']
             ]
