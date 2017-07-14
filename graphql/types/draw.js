@@ -12,6 +12,7 @@ const {
 const db = require('../../models/db')
 const Odd = require('./odd')
 const Game = require('./game')
+const Card = require('./card')
 
 module.exports = {
   Type: new GraphQLObjectType({
@@ -71,6 +72,36 @@ module.exports = {
       },
       winningSymbol: {
         type: GraphQLString
+      },
+      winningCards: {
+        type: new GraphQLList(Card.Type),
+        resolve: (draw) => {
+          return new Promise((resolve, reject) => {
+            let Cards = [null, 'a', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k']
+            let cards = []
+            let winningNumber = draw.winningNumber.split('-')
+            let winningSymbol = draw.winningSymbol.split('-')
+
+            for (let i = 0; i < winningNumber.length-1; i++) {
+              cards.push({
+                number: winningNumber[i],
+                rank: Cards[winningNumber[i]],
+                symbol: winningSymbol[i]
+              })
+            }
+
+            resolve(cards)
+          })
+        },
+      },
+      winningSum: {
+        type: GraphQLString,
+        resolve: (draw) => {
+          return new Promise((resolve, reject) => {
+            let winningNumber = draw.winningNumber.split('-')
+            resolve(winningNumber[winningNumber.length-1])
+          })
+        }
       },
       odds: {
         type: new GraphQLList(Odd.Type),
