@@ -498,7 +498,7 @@ baccarat.stdout.on('data', function (data) {
 
         db.Draw.create({
           drawNumber: json.data.drawNumber,
-          gameId: 1
+          gameId: 2
         }, {
           logging: false
         }).then(draw => {
@@ -568,7 +568,7 @@ baccarat.stdout.on('data', function (data) {
             wss.broadcast(JSON.stringify({
               type: 'create',
               table: 'odd',
-              game: 'poker',
+              game: 'baccarat',
               test: true,
               data: {
                 drawNumber: json.data.drawNumber,
