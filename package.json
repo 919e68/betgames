@@ -12,6 +12,7 @@
     "child_process": "^1.0.2",
     "cors": "^2.8.3",
     "ejs": "^2.5.6",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "express": "^4.15.3",
     "express-graphql": "^0.6.6",
     "express-session": "^1.15.3",
