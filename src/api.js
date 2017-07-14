@@ -37,9 +37,12 @@ module.exports = {
             draws {
               id
               drawNumber
+              winningCards {
+                number
+                rank
+                symbol
+              }
               winnerFormatted
-              winningSymbol
-              winningNumber
               game {
                 name
               }

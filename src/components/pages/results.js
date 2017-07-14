@@ -61,6 +61,7 @@ export default class Results extends Component {
           </section>
           <div id="table">
             <header>
+          
             </header>
             <table className="table table-striped bets rt-responsive-table-0 rt-responsive-table">
                 <thead>
@@ -73,12 +74,20 @@ export default class Results extends Component {
                 </thead>
                 <tbody>
                   {
-                    this.state.draws.map( (draw, index) => {
+                    this.state.draws.map((draw, index) => {
                       return (
                         <tr key={index}>
                           <td>{draw.drawNumber} </td>
                           <td>{draw.game.name}</td>
-                          <td>{draw.winnerFormatted}</td>
+                          <td>{draw.winnerFormatted}&nbsp;
+                          {
+                            draw.winningCards.map((card, index) => {
+                              return (
+                                <span className={`card ${card.symbol}`} key={`card-${index}`}>{card.rank}<span className={card.symbol}></span></span>
+                              )
+                            })
+                          }
+                          </td>
                           <td><Link to={`/watch/${draw.game.name}/${draw.drawNumber}`} >Watch</Link></td>
                         </tr>
                       )

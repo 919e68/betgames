@@ -82,7 +82,9 @@ module.exports = {
             let winningNumber = draw.winningNumber.split('-')
             let winningSymbol = draw.winningSymbol.split('-')
 
-            for (let i = 0; i < winningNumber.length-1; i++) {
+            let length = winningNumber.length > 1? winningNumber.length-1 : winningNumber.length
+            
+            for (let i = 0; i < length; i++) {
               cards.push({
                 number: winningNumber[i],
                 rank: Cards[winningNumber[i]],
