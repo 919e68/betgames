@@ -19,7 +19,8 @@ module.exports = new GraphQLSchema({
       latestDraw: draws.Query.latestDraw,
       recentBets: bets.Query.recentBets,
 
-      odds: odds.Query.odds
+      odds: odds.Query.odds,
+      draws: draws.Query.draws
     }
   }),
 
