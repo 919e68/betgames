@@ -13,8 +13,8 @@ const Draw = require('../types/draw')
 
 module.exports = {
   Query: {
-    draw: {
-      type: GraphQLList(Draw.type),
+    draws: {
+      type: new GraphQLList(Draw.Type),
       resolve: () => {
         return new Promise((resolve, reject) => {
           db.Draw.findAll({
