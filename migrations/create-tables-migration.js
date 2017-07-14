@@ -40,6 +40,7 @@ module.exports = {
           unique: true
         },
         name: Sequelize.STRING,
+        code: Sequelize.STRING,
         description: Sequelize.STRING,
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE
