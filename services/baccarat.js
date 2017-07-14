@@ -33,7 +33,7 @@ baccarat.stdout.on('data', function (data) {
 
         db.Draw.create({
           drawNumber: json.data.drawNumber,
-          gameId: 1
+          gameId: 2
         }, {
           logging: false
         }).then(draw => {
