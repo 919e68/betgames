@@ -13,6 +13,22 @@ const Draw = require('../types/draw')
 
 module.exports = {
   Query: {
+    draw: {
+      type: GraphQLList(Draw.type),
+      resolve: () => {
+        return new Promise((resolve, reject) => {
+          db.Draw.findAll({
+            order: [
+              ['id', 'DESC']
+            ]
+          }).then(draws => {
+            resolve(draws)
+          }).catch(err => {
+            reject(err)
+          })
+        })
+      }
+    },
     latestDraw: {
       type: new GraphQLObjectType({
         name: 'LatestDrawResponse',
