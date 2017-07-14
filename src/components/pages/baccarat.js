@@ -69,17 +69,14 @@ class Poker extends Component {
       if(!this.state.drawNumber) {
           this.setState({gamePartId: draw.latestOdds[0].gamePartId, drawNumber: draw.drawNumber})
           this.setState({odds: Object.assign({}, {
-            hand_1: { id: +draw.latestOdds[0].id, odds: draw.latestOdds[0].odds },
-            hand_2: { id: +draw.latestOdds[1].id, odds: draw.latestOdds[1].odds },
-            hand_3: { id: +draw.latestOdds[2].id, odds: draw.latestOdds[2].odds },
-            hand_4: { id: +draw.latestOdds[3].id, odds: draw.latestOdds[3].odds },
-            hand_5: { id: +draw.latestOdds[4].id, odds: draw.latestOdds[4].odds },
-            hand_6: { id: +draw.latestOdds[5].id, odds: draw.latestOdds[5].odds },
+            player: { id: +draw.latestOdds[0].id, odds: draw.latestOdds[0].odds },
+            banker: { id: +draw.latestOdds[1].id, odds: draw.latestOdds[1].odds },
+            tie: { id: +draw.latestOdds[2].id, odds: draw.latestOdds[2].odds },
           })}, () => {
             console.log('ODDS' , this.state.odds)
           })
 
-          return Api.users.bets(1, 1)
+          return Api.users.bets(1, 2)
       }
     }).then( response => {
       console.log(' CURRENT BETS', response)
@@ -97,6 +94,8 @@ class Poker extends Component {
         if(data.game != 'baccarat') {
           return
         }
+
+        console.log(data)
 
         if(data.type == 'winner') {
           Api.users.bets(1, 2).then( response => {
@@ -247,21 +246,21 @@ class Poker extends Component {
           <BetOptions>
             <BetOption 
               showingWinner={data.type == 'winner'}
-              winner={data.data ? data.data.winner == 'hand_1' : false}
+              winner={data.data ? data.data.winner == 'player' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' } 
-              betName={Translate('Hand 1 Wins')} 
-              active={selectedOdds ? selectedOdds.winner == 'hand_1' : false}
-              odds={!odds.hand_1 ? null : odds.hand_1.odds}
+              betName={Translate('Player')} 
+              active={selectedOdds ? selectedOdds.winner == 'player' : false}
+              odds={!odds.player ? null : odds.player.odds}
               onClick={() => {
                 let bet = {
-                  odds: odds.hand_1,
-                  chosenOutcome: 'Hand 1 Wins',
-                  winner: 'hand_1'
+                  odds: odds.player,
+                  chosenOutcome: 'Player Wins',
+                  winner: 'player'
                 }
 
                 self.setState({selectedOdds: Object.assign({}, bet)})
-                if (odds.hand_1.odds >= 10) {
+                if (odds.player.odds >= 10) {
                   self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
                 } else {
                   self.setState({limits: Object.assign({}, { min: null, max: null })})
@@ -271,21 +270,21 @@ class Poker extends Component {
 
             <BetOption 
               showingWinner={data.type == 'winner'}
-              winner={data.data ? data.data.winner == 'hand_2' : false}
+              winner={data.data ? data.data.winner == 'banker' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' } 
-              betName={Translate('Hand 2 Wins')} 
-              active={selectedOdds ? selectedOdds.winner == 'hand_2' : false}
-              odds={!odds.hand_2 ? null : odds.hand_2.odds}
+              betName={Translate('Banker')} 
+              active={selectedOdds ? selectedOdds.winner == 'banker' : false}
+              odds={!odds.banker ? null : odds.banker.odds}
               onClick={() => {
                 let bet = {
-                  odds: odds.hand_2,
-                  chosenOutcome: 'Hand 2 Wins',
-                  winner: 'hand_2'
+                  odds: odds.banker,
+                  chosenOutcome: 'Banker Wins',
+                  winner: 'banker'
                 }
 
                 self.setState({selectedOdds: Object.assign({}, bet)})
-                if (odds.hand_2.odds >= 10) {
+                if (odds.banker.odds >= 10) {
                   self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
                 } else {
                   self.setState({limits: Object.assign({}, { min: null, max: null })})
@@ -295,21 +294,21 @@ class Poker extends Component {
 
             <BetOption 
               showingWinner={data.type == 'winner'}
-              winner={data.data ? data.data.winner == 'hand_3' : false}
+              winner={data.data ? data.data.winner == 'tie' : false}
               loading={data.type == 'waiting' || !self.state.drawNumber} 
               disabled={data.type == 'winner' || data.type == 'waiting' } 
-              betName={Translate('Hand 3 Wins')} 
-              active={selectedOdds ? selectedOdds.winner == 'hand_3' : false}
-              odds={!odds.hand_3 ? null : odds.hand_3.odds}
+              betName={Translate('Tie')} 
+              active={selectedOdds ? selectedOdds.winner == 'tie' : false}
+              odds={!odds.tie ? null : odds.tie.odds}
               onClick={() => {
                 let bet = {
-                  odds: odds.hand_3,
-                  chosenOutcome: 'Hand 3 Wins',
-                  winner: 'hand_3'
+                  odds: odds.tie,
+                  chosenOutcome: 'Tie',
+                  winner: 'tie'
                 }
 
                 self.setState({selectedOdds: Object.assign({}, bet)})
-                if (odds.hand_3.odds >= 10) {
+                if (odds.tie.odds >= 10) {
                   self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
                 } else {
                   self.setState({limits: Object.assign({}, { min: null, max: null })})
