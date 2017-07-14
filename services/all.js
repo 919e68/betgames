@@ -587,7 +587,7 @@ baccarat.stdout.on('data', function (data) {
 
 
     } else if (json.type == 'winner') {
-
+      console.log(JSON.stringify(json))
       db.Draw.update({
         winner: json.data.winner,
         winningNumber: json.data.winningNumber,
