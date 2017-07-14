@@ -59,7 +59,9 @@ export default class BetHistory extends Component {
                           <td>{bet.odd.outcome.name}</td>
                           <td>{bet.odd.odds.toFixed(2)}</td>
                           <td>{bet.odd.isWinner ? 'Won' : 'Lost'}</td>
-                          <td>${bet.amount.toFixed(2)}</td>
+                          <td>
+                            ${bet.amount.toFixed(2)}
+                          </td>
                           <td><Link to={`/watch/${bet.draw.game.name}/${bet.draw.drawNumber}`} >Watch</Link></td>
                         </tr>
                       )
