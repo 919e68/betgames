@@ -20,8 +20,10 @@ import BetButtonGroup from '../elements/bet-button-group'
 import BetButton from '../elements/bet-button'
 import PlaceBetButton from '../elements/place-bet-button'
 import BetInput from '../elements/bet-input'
+import RecentBets from '../elements/recent-bets'
+import Api from '../../api'
 
-class Baccarat extends Component {
+class Poker extends Component {
 
   constructor(props) {
     super(props)
@@ -30,41 +32,122 @@ class Baccarat extends Component {
       betInput: 0,
       data: {},
       gameParts: [{
-        title: 'primary bets',
-        id: 9
+          title: 'primary bets',
+          id: 6
       }, {
-        title: 'player card',
-        id: 10
+          title: 'player card',
+          id: 7
       }, {
-        title: 'banker',
-        id: 10
+          title: 'banker card',
+          id: 8
       }],
       gamePartId: null,
-      odds: {
-          
+      drawNumber: null,
+      odds: {},
+      user: {},
+      selectedOdds: null,
+      error: null,
+      placingBet: false,
+      hasBet: false,
+      limits: {
+        min: null,
+        max: null
       },
-      user: {
-        
-      }
+      recentBets: []
     }
 
     this._onChange = this._onChange.bind(this)
+    this.placeBet = this.placeBet.bind(this)
   }
 
   componentDidMount() {
-    let self = this
-    let socket = new WebSocket('ws://localhost:7000')
+    this.socket = new WebSocket('ws://localhost:7000')
+    // GET LATEST DRAW to initialize game
+    Api.draws.latestDraw(1).then( response => {
+      console.log('LATEST DRAW', response)
+      let { draw } = response.data.data.latestDraw
+      if(!this.state.drawNumber) {
+          this.setState({gamePartId: draw.latestOdds[0].gamePartId, drawNumber: draw.drawNumber})
+          this.setState({odds: Object.assign({}, {
+            hand_1: { id: +draw.latestOdds[0].id, odds: draw.latestOdds[0].odds },
+            hand_2: { id: +draw.latestOdds[1].id, odds: draw.latestOdds[1].odds },
+            hand_3: { id: +draw.latestOdds[2].id, odds: draw.latestOdds[2].odds },
+            hand_4: { id: +draw.latestOdds[3].id, odds: draw.latestOdds[3].odds },
+            hand_5: { id: +draw.latestOdds[4].id, odds: draw.latestOdds[4].odds },
+            hand_6: { id: +draw.latestOdds[5].id, odds: draw.latestOdds[5].odds },
+          })}, () => {
+            console.log('ODDS' , this.state.odds)
+          })
 
-    socket.onmessage = function(message) {
-      let data = JSON.parse(message.data)
-      console.log(data)
-
-      if(data.type == 'create') {
-          self.setState({gamePartId: data.data.gamePartId})
-      } else {
-        self.setState({data: Object.assign({}, data) })
+          return Api.users.bets(1, 1)
       }
+    }).then( response => {
+      console.log(' CURRENT BETS', response)
+      this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
+        console.log('recent bets', this.state.recentBets)
+      })
+    }).catch( err => {
+      console.log(err)
+    })
+
+
+    this.socket.onmessage = (message) => {
+        let data = JSON.parse(message.data)
+
+        if(data.game != 'baccarat') {
+          return
+        }
+
+        if(data.type == 'winner') {
+          Api.users.bets(1, 1).then( response => {
+            console.log(' CURRENT BETS', response)
+            this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
+              // console.log('recent bets', this.state.recentBets)
+            })
+            this.setState({ user: Object.assign({}, this.state.user, {currentBalance: response.data.data.user.currentBalance})})
+          }).catch( err => {
+            console.log(err)
+          }) 
+        }
+
+        if(data.type == 'create') {
+          console.log('CREATEe', data)
+          this.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber})
+          this.setState({odds: Object.assign({}, data.data.odds)}, function(){
+            // console.log(' ODDS' ,this.state.odds)
+          })
+
+          // RESET DATA 
+          this.setState({selectedOdds: null, betInput: 0, hasBet: false})
+          this.setState({limits: Object.assign({}, { min: null, max: null })}) 
+
+          Api.users.bets(1, 1).then( response => {
+            console.log(' CURRENT BETS', response)
+            this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
+              // console.log('recent bets', this.state.recentBets)
+            })
+            this.setState({ user: Object.assign({}, this.state.user, {currentBalance: response.data.data.user.currentBalance})})
+          }).catch( err => {
+            console.log(err)
+          })
+
+        } else {
+          this.setState({data: Object.assign({}, data) }, function() {
+            // console.log(this.state.data)
+          })
+        }
     }
+
+    // LOGIN USER 1
+    Api.users.get(1).then(response => {
+      this.setState({user: Object.assign({}, response.data.data.user) }, function() {
+        console.log(this.state.user)
+      })
+    })
+  }
+
+  componentWillUnmount () {
+
   }
 
   _onChange(e) {
@@ -76,24 +159,81 @@ class Baccarat extends Component {
   }
 
   placeBet() {
+    let self = this
+
     // CLICK ON PLACE BET BUTTON / SUBMIT PLACE BET FORM
+    if(!this.state.selectedOdds && !this.state.betInput) {
+      this.setState({error: 'Please select an option, and your amount to bet'})
+      return
+    } else if(this.state.hasBet) {
+      this.setState({error: 'You have already placed a bet for this game part'})
+      return
+    }else if(!this.state.betInput) {
+      this.setState({error: 'Please select an amount to bet'})
+      return
+    } else if (!this.state.selectedOdds) {
+      this.setState({error: 'Please select an option'})
+      return
+    }  else if(this.state.user.currentBalance < this.state.betInput) {
+      this.setState({error: 'You don\'t have enough balance'})
+      return
+    }
+
+    self.setState({placingBet: true})
+
+    let data = {
+      drawNumber: self.state.drawNumber,
+      userId: 1,
+      oddId: self.state.selectedOdds.odds.id,
+      amount: self.state.betInput
+    }
+
+    console.log(self.state.selectedOdds.odds)
+
+    Api.bets.create(data).then(response => {
+      console.log('PLACE BET RESPONSE', response)
+      self.setState({
+        placingBet: false, 
+        user: Object.assign({}, self.state.user, {currentBalance: self.state.user.currentBalance - self.state.betInput}),
+        error: null,
+        hasBet: true
+      })
+    })
+  }
+
+  renderSelectedOdds() {
+    let self = this
+    let { selectedOdds } = self.state
+
+    if(selectedOdds) {
+
+      return (
+        <div>
+          Betting for: 
+          <div className="well well-sm">
+            {selectedOdds.chosenOutcome}&nbsp;({selectedOdds.odds.odds})
+          </div>
+        </div>
+      )
+    }
   }
 
   render() {
-    let self = this;
+    let self = this
+    let { data, odds, selectedOdds } = self.state
 
     return (
       <div>
         <Navbar user={this.state.user} />
-        <GameMenu activeGame="baccarat" />
-        <Stream url="http://localhost:3000/streams/baccarat.html" />
+        <GameMenu activeGame="baccarat"/>
+        <Stream url="http://localhost:3000/streams/poker.html" />
 
         <BetOptionsContainer>
           <GameParts>
             {
               this.state.gameParts.map( (gamePart, index) => {
                 return (
-                  <GamePart key={index} title={gamePart.title} width={self.state.gamePartId = gamePart.id || index == 0 ? 100 : 0} length={self.state.gameParts.length} />
+                  <GamePart key={index} title={gamePart.title} width={this.state.gamePartId >= gamePart.id || index == 0 ? 100 : 0} length={this.state.gameParts.length} />
                 )
               })
             }
@@ -105,36 +245,161 @@ class Baccarat extends Component {
             <h4>{Translate('Choose Betting Option')}</h4>
           </header>
           <BetOptions>
-            <BetOption betName={Translate('Player')} odds={1} />
-            <BetOption betName={Translate('Banker')} odds={1} />
-            <BetOption betName={Translate('Tie')} odds={1} />
+            <BetOption 
+              showingWinner={data.type == 'winner'}
+              winner={data.data ? data.data.winner == 'hand_1' : false}
+              loading={data.type == 'waiting' || !self.state.drawNumber} 
+              disabled={data.type == 'winner' || data.type == 'waiting' } 
+              betName={Translate('Hand 1 Wins')} 
+              active={selectedOdds ? selectedOdds.winner == 'hand_1' : false}
+              odds={!odds.hand_1 ? null : odds.hand_1.odds}
+              onClick={() => {
+                let bet = {
+                  odds: odds.hand_1,
+                  chosenOutcome: 'Hand 1 Wins',
+                  winner: 'hand_1'
+                }
+
+                self.setState({selectedOdds: Object.assign({}, bet)})
+                if (odds.hand_1.odds >= 10) {
+                  self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
+                } else {
+                  self.setState({limits: Object.assign({}, { min: null, max: null })})
+                }
+              }}
+            />
+
+            <BetOption 
+              showingWinner={data.type == 'winner'}
+              winner={data.data ? data.data.winner == 'hand_2' : false}
+              loading={data.type == 'waiting' || !self.state.drawNumber} 
+              disabled={data.type == 'winner' || data.type == 'waiting' } 
+              betName={Translate('Hand 2 Wins')} 
+              active={selectedOdds ? selectedOdds.winner == 'hand_2' : false}
+              odds={!odds.hand_2 ? null : odds.hand_2.odds}
+              onClick={() => {
+                let bet = {
+                  odds: odds.hand_2,
+                  chosenOutcome: 'Hand 2 Wins',
+                  winner: 'hand_2'
+                }
+
+                self.setState({selectedOdds: Object.assign({}, bet)})
+                if (odds.hand_2.odds >= 10) {
+                  self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
+                } else {
+                  self.setState({limits: Object.assign({}, { min: null, max: null })})
+                }
+              }}
+            />
+
+            <BetOption 
+              showingWinner={data.type == 'winner'}
+              winner={data.data ? data.data.winner == 'hand_3' : false}
+              loading={data.type == 'waiting' || !self.state.drawNumber} 
+              disabled={data.type == 'winner' || data.type == 'waiting' } 
+              betName={Translate('Hand 3 Wins')} 
+              active={selectedOdds ? selectedOdds.winner == 'hand_3' : false}
+              odds={!odds.hand_3 ? null : odds.hand_3.odds}
+              onClick={() => {
+                let bet = {
+                  odds: odds.hand_3,
+                  chosenOutcome: 'Hand 3 Wins',
+                  winner: 'hand_3'
+                }
+
+                self.setState({selectedOdds: Object.assign({}, bet)})
+                if (odds.hand_3.odds >= 10) {
+                  self.setState({limits: Object.assign({}, { min: 1, max: 50 })})
+                } else {
+                  self.setState({limits: Object.assign({}, { min: null, max: null })})
+                }
+              }}
+            />
+            
           </BetOptions>
 
         </BetOptionsContainer>
 
         <BetSlip>
           <BetSlipHeader title={Translate('Bet Slip')} />
+
+          {
+            this.state.error ?
+            <section className="place-bet-alerts">
+              <div className="alert alert-warning" id="message_block">
+                <span className="glyphicon glyphicon-exclamation-sign"></span> {this.state.error}
+              </div>
+            </section>
+            :
+            null
+          }  
+
+          { this.renderSelectedOdds() } 
+
+          {
+            !this.state.hasBet && !this.state.selectedOdds ? 
+            <section className="bet-slip-alerts">
+              <div id="empty_cart" style={{display: 'block', marginBottom: 16}}>
+                Your bet slip is empty. Please choose betting option from a list.        
+              </div>
+            </section>
+            :
+            null
+          } 
+
           <section className="capitalized">
             {Translate('Amount')}
           </section>
+
           <BetButtonGroup>
-            <BetButton disabled={false} active={this.state.betInput == 1} title={'1'} onClick={() => {this.SetBet(1)}} />
-            <BetButton disabled={false} active={this.state.betInput == 3} title={'3'} onClick={() => this.SetBet(3)} />
-            <BetButton disabled={false} active={this.state.betInput == 4} title={'5'} onClick={() => this.SetBet(5)} />
-            <BetButton disabled={false} active={this.state.betInput == 10} title={'10'} onClick={() => this.SetBet(10)} />
-            <BetButton disabled={false} active={this.state.betInput == 20} title={'20'} onClick={() => this.SetBet(20)} />
-            <BetButton disabled={false} active={this.state.betInput == 30} title={'30'} onClick={() => this.SetBet(30)} />
-            <BetButton disabled={false} active={this.state.betInput == 50} title={'50'} onClick={() => this.SetBet(50)} />
-            <BetButton disabled={false} active={this.state.betInput == 100} title={'100'} onClick={() => this.SetBet(100)} />
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 1 : false) || (this.state.limits.min ? this.state.limits.min > 1 : false)} active={this.state.betInput == 1} title={'1'} onClick={() => {this.SetBet(1)}} /> 
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 3 : false) || (this.state.limits.min ? this.state.limits.min > 3 : false)} active={this.state.betInput == 3} title={'3'} onClick={() => this.SetBet(3)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 5 : false) || (this.state.limits.min ? this.state.limits.min > 5 : false)} active={this.state.betInput == 4} title={'5'} onClick={() => this.SetBet(5)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 10 : false) || (this.state.limits.min ? this.state.limits.min > 10 : false)} active={this.state.betInput == 10} title={'10'} onClick={() => this.SetBet(10)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 20 : false) || (this.state.limits.min ? this.state.limits.min > 20 : false)} active={this.state.betInput == 20} title={'20'} onClick={() => this.SetBet(20)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 30 : false) || (this.state.limits.min ? this.state.limits.min > 30 : false)} active={this.state.betInput == 30} title={'30'} onClick={() => this.SetBet(30)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 50 : false) || (this.state.limits.min ? this.state.limits.min > 50 : false)} active={this.state.betInput == 50} title={'50'} onClick={() => this.SetBet(50)} />
+
+            <BetButton disabled={data.type == 'winner' || data.type == 'waiting' || (this.state.limits.max ? this.state.limits.max < 100 : false) || (this.state.limits.min ? this.state.limits.min > 100: false)} active={this.state.betInput == 100} title={'100'} onClick={() => this.SetBet(100)} />
           </BetButtonGroup>
 
           <BetInput value={this.state.betInput} onChange={this._onChange} />
 
-          <PlaceBetButton onClick={() => {alert()}} disabled={this.state.betInput == ''} />
+          <p>
+            { 
+              this.state.limits.min ? <span>Min: ${this.state.limits.min.toFixed(2)} </span> : <span></span>
+            }
+            {
+              this.state.limits.max ? <span>Max: ${this.state.limits.max.toFixed(2)} </span> : <span></span>
+            }
+          </p>
+
+          {
+            this.state.hasBet ?
+            <section className="place-bet-alerts">
+              <div className="alert alert-info">
+                <span className="glyphicon glyphicon-exclamation-sign"></span>
+                &nbsp;Your bet has been placed successfully.
+              </div>
+            </section>
+            :
+            null
+          }
+
+          <PlaceBetButton onClick={this.placeBet} disabled={!this.state.betInput || !this.state.gamePartId || this.state.placingBet || this.state.hasBet } />
+
           </BetSlip>
+          <RecentBets bets={this.state.recentBets} />
       </div>
     )
   }
 }
 
-export default Baccarat
+export default Poker
