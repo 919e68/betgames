@@ -117,8 +117,8 @@ module.exports = {
         gameId: Sequelize.BIGINT,
         drawNumber: Sequelize.BIGINT,
         winner: Sequelize.STRING,
-        winningNumber: Sequelize.STRING(20),
-        winningSymbol: Sequelize.STRING(20),
+        winningNumber: Sequelize.STRING(100),
+        winningSymbol: Sequelize.STRING(100),
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE
       }
