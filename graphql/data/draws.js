@@ -18,6 +18,11 @@ module.exports = {
       resolve: () => {
         return new Promise((resolve, reject) => {
           db.Draw.findAll({
+            where: {
+              winner: {
+                $ne: null
+              }
+            },
             order: [
               ['id', 'DESC']
             ]
