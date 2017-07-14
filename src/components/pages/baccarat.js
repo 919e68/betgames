@@ -63,7 +63,7 @@ class Poker extends Component {
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:7000')
     // GET LATEST DRAW to initialize game
-    Api.draws.latestDraw(1).then( response => {
+    Api.draws.latestDraw(2).then( response => {
       console.log('LATEST DRAW', response)
       let { draw } = response.data.data.latestDraw
       if(!this.state.drawNumber) {
