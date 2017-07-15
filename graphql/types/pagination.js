@@ -12,6 +12,9 @@ module.exports = {
       page: {
         type: GraphQLInt
       },
+      limit: {
+        type: GraphQLInt
+      },
       pageCount: {
         type: GraphQLInt
       },
