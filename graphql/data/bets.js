@@ -8,6 +8,7 @@ const {
 const db = require('../../models/db')
 const Error = require('../types/error')
 const Bet = require('../types/bet')
+const BettingBalance = require('../types/betting-balance')
 
 module.exports = {
   Query: {
@@ -50,6 +51,57 @@ module.exports = {
 
           })
 
+        })
+      }
+    },
+
+    bettingBalance: {
+      type: BettingBalance.Type,
+      args: {
+        userId: {
+          name: 'userId',
+          type: GraphQLID
+        },
+        drawNumber: { 
+          name: 'drawNumber', 
+          type: GraphQLID
+        },
+        outcomeId: {
+          name: 'outcomeId',
+          type: GraphQLID
+        }
+      },
+      resolve: (root, { userId, drawNumber, outcomeId }) => {
+        return new Promise((resolve, reject) => {
+          let errors = []
+
+         
+          if (errors.length == 0) {
+            db.sequelize.query('SELECT ISNULL(SUM(Bets.amount), 0) AS totalBet FROM Bets LEFT JOIN Odds ON Bets.oddId = Odds.id WHERE Bets.userId = :userId AND Bets.drawNumber = :drawNumber AND Odds.outcomeId = :outcomeId', {
+              type: db.sequelize.QueryTypes.SELECT,
+              replacements: {
+                userId: 1,
+                drawNumber: 10029283123,
+                outcomeId: 5
+              }
+            }).then(data => {
+              db.Setting.findOne({
+                where: {
+                  key: 'max-bet'
+                }
+              }).then(maxBet => {
+          
+                let min = data[0].totalBet >= 50? 0 : 1
+                let max = parseInt(maxBet.value) - data[0].totalBet
+     
+                resolve({
+                  min: min,
+                  max: max
+                })
+              })
+
+            })
+          }
         })
       }
     }

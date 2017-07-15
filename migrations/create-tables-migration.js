@@ -186,6 +186,22 @@ module.exports = {
         updatedAt: Sequelize.DATE
       }
     )
+
+    queryInterface.createTable(
+      'Settings',
+      {
+        id: {
+          type: Sequelize.BIGINT,
+          primaryKey: true,
+          autoIncrement: true
+        },
+        key: Sequelize.STRING,
+        name: Sequelize.STRING,
+        value: Sequelize.STRING,
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE
+      }
+    )
   },
 
   down: function (queryInterface, Sequelize) {

@@ -22,7 +22,7 @@ router.get('/login', (req, res) => {
   res.render('layout/login')
 })
 
-router.get('/stream', (req, res) => {
+router.get('/stream/refresh', (req, res) => {
   res.send('1')
 })
 
