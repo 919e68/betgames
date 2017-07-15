@@ -3,23 +3,11 @@ const db = require('../models/db')
 const moment = require('moment')
 const user = require('../graphql/types/user')
 
-let where = {}
-let date = '2017-07-14'
-
-where.updatedAt = {
-  $gte: moment(`2017-07-14`).startOf('day').utc().format('YYYY-MM-DD HH:mm'),
-  $lte: moment(`2017-07-14`).endOf('day').utc().format('YYYY-MM-DD HH:mm')
-}
-
-console.log(moment(`2017-07-14`).startOf('day').utc().format('YYYY-MM-DD HH:mm'), moment(`2017-07-14`).endOf('day').utc().format('YYYY-MM-DD HH:mm'))
-
-// db.Draw.findAll({
-//   where: where,
-//   order: [
-//     ['id', 'DESC']
-//   ]
-// }).then(draws => {
- 
-// }).catch(err => {
- 
-// })
+db.sequelize.query('SELECT ISNULL(SUM(Bets.amount), 0) AS totalBet FROM Bets LEFT JOIN Odds ON Bets.oddId = Odds.id WHERE Bets.userId = :userId AND Bets.drawNumber = :drawNumber AND Odds.outcomeId = :outcomeId', {
+  type: sequelize.QueryTypes.SELECT,
+  replacements: {
+    userId: 1,
+    drawNumber: 10029283123,
+    outcomeId: 5
+  }
+})

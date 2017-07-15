@@ -3,21 +3,11 @@
 module.exports = {
   up: function (queryInterface, Sequelize) {
 
-    return queryInterface.bulkInsert('Games', [
+    return queryInterface.bulkInsert('Settings', [
       {
-        id: 1,
-        name: 'Bet on Poker',
-        code: 'poker'
-      },
-      {
-        id: 2,
-        name: 'Baccarat',
-        code: 'baccarat'
-      },
-      {
-        id: 3,
-        name: 'War of Bets',
-        code: 'war'
+        key: 'max-bet',
+        name: 'Max bet',
+        value: '50'
       }
     ])
   },

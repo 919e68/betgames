@@ -18,6 +18,7 @@ module.exports = new GraphQLSchema({
       games: games.Query.games,
       latestDraw: draws.Query.latestDraw,
       recentBets: bets.Query.recentBets,
+      bettingBalance: bets.Query.bettingBalance,
 
       odds: odds.Query.odds,
       draws: draws.Query.draws
