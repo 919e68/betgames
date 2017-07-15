@@ -90,6 +90,7 @@ module.exports = {
             let pageCount = Math.ceil(count/limit)
             let pagination = {
               page: page,
+              limit: limit,
               pageCount: pageCount,
               count: count,
               prev: page > 1? true : false,
