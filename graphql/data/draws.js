@@ -11,11 +11,25 @@ const moment = require('moment')
 const db = require('../../models/db')
 const Error = require('../types/error')
 const Draw = require('../types/draw')
+const Pagination = require('../types/pagination')
 
 module.exports = {
   Query: {
     draws: {
-      type: new GraphQLList(Draw.Type),
+      type: new GraphQLObjectType({
+        name: 'DrawsResponse',
+        fields: () => ({
+          data: {
+            type: new GraphQLList(Draw.Type)
+          },
+          errors: {
+            type: new GraphQLList(Error.Type)
+          },
+          pagination: {
+            type: Pagination.Type
+          }
+        })
+      }),
       args: {
         gameId: {
           name: 'gameId',
@@ -28,10 +42,26 @@ module.exports = {
         drawNumber: {
           name: 'drawNumber',
           type: GraphQLString
+        },
+        page: {
+          name: 'page',
+          type: GraphQLInt
+        },
+        limit: {
+          name: 'limit',
+          type: GraphQLInt
         }
       },
-      resolve: (root, { gameId, date, drawNumber }) => {
+      resolve: (root, { gameId, date, drawNumber, page, limit }) => {
         return new Promise((resolve, reject) => {
+          if (!page) {
+            page = 1
+          }
+
+          if (!limit) {
+            limit = 30
+          }
+
           let where = {
             winner: {
               $ne: null
@@ -53,16 +83,34 @@ module.exports = {
             where.drawNumber = drawNumber
           }
 
-          db.Draw.findAll({
-            where: where,
-            order: [
-              ['id', 'DESC']
-            ]
-          }).then(draws => {
-            resolve(draws)
-          }).catch(err => {
-            reject(err)
+          db.Draw.count({
+            where: where
+          }).then(count => {
+
+            let pageCount = Math.ceil(count/limit)
+            let pagination = {
+              page: page,
+              pageCount: pageCount,
+              count: count,
+              prev: page > 1? true : false,
+              next: page < pageCount? true : false
+            }
+
+            db.Draw.findAll({
+              where: where,
+              order: [
+                ['id', 'DESC']
+              ],
+              offset: (page - 1) * limit,
+              limit: limit,
+            }).then(data => {
+              resolve({ data, pagination })
+            }).catch(err => {
+              reject(err)
+            })
+
           })
+
         })
       }
     },
