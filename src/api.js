@@ -54,6 +54,7 @@ module.exports = {
               id
               updatedAt
               drawNumber
+              createdAt
               winningCards {
                 number
                 rank

@@ -58,8 +58,8 @@ export default class Results extends Component {
         <GameMenu />
         
         <div className="container">
-          <section className="filter" style={{paddingTop: 20, paddingBottom: 20}}>
-            <form className="form-inline" onSubmit={this.handleSubmit}>
+          <section className="filter" style={{paddingTop: 40, paddingBottom: 20}}>
+            <form className="form-inline" onSubmit={this.handleSubmit} style={{paddingBottom:20}}>
               <DatePicker ref="date" value={this.state.date} onChange={(e) => {
                 this.setState({date: moment(e).format('YYYY-MM-DD')})
               }} />
@@ -78,6 +78,8 @@ export default class Results extends Component {
                 <button type="submit" className="btn filter-button">Filter</button>
               </div>
             </form>
+
+            {moment(this.state.date).format('YYYY-MM-DD') } 00:00 - {moment(this.state.date).add('days', 1).format('YYYY-MM-DD')} 00:00
           </section>
           <div id="table">
             <header>
@@ -97,7 +99,7 @@ export default class Results extends Component {
                     this.state.draws.map((draw, index) => {
                       return (
                         <tr key={index}>
-                          <td>{draw.drawNumber} </td>
+                          <td>{moment(draw.createdAt).format('hh:mm:ss')} - {draw.drawNumber} </td>
                           <td>{draw.game.name}</td>
                           <td>{draw.winnerFormatted}&nbsp;
                           {

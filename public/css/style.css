@@ -24,3 +24,19 @@ body {
 .capitalized {
   text-transform: capitalize;
 }
+
+.form-inline .input-group {
+  margin-right: 10px;
+}
+
+.form-inline .input-group .input-group-addon {
+  border-radius: 0;
+}
+
+.form-inline > .form-group {
+  margin-right: 10px;
+}
+
+.form-inline .filter-button {
+  height: 34px;
+}

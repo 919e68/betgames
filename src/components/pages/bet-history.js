@@ -35,10 +35,10 @@ export default class BetHistory extends Component {
           <div id="table">
             <header>
             </header>
-            <table className="table table-striped bets rt-responsive-table-0 rt-responsive-table">
+            <table className="table table-striped bets rt-responsive-table-0 rt-responsive-table" style={{marginTop: 40}}>
                 <thead>
                   <tr>
-                    <th>Date</th>
+                    <th style={{width: 200}}>Date</th>
                     <th>Game</th>
                     <th>DRAW</th>
                     <th>Bet</th>
@@ -61,7 +61,6 @@ export default class BetHistory extends Component {
                           <td>
                             ${bet.amount.toFixed(2)}
                           </td>
-                          <td><Link to={`/watch/${bet.draw.game.name}/${bet.draw.drawNumber}`} >Watch</Link></td>
                         </tr>
                       )
                     })
