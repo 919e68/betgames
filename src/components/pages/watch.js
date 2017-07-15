@@ -31,13 +31,14 @@ export default class Watch extends Component {
         game = 'poker'
         break
     }
+    
     return (
       <div>
         <Navbar />
         <GameMenu />
 
         <div className="container" style={{paddingTop: 40, textAlign: 'center'}}>
-          <video src={`https://video.betgames.tv/stream${game}/170714/${this.props.match.params.drawNumber}.mp4`} className="fp-engine " autoPlay="true" preload="true" ></video>
+          <video src={`https://video.betgames.tv/stream${game}/${this.props.match.params.date}/${this.props.match.params.drawNumber}.mp4`} className="fp-engine " autoPlay="true" preload="true" ></video>
           <br />
           <Link to="/results">Back to Results </Link>
         </div>

@@ -22,7 +22,7 @@ ReactDOM.render((
       <Route path='/baccarat' component={Baccarat}/>
       <Route path='/war' component={WarOfBets}/>
       <Route path='/history' component={BetHistory}/>
-      <Route path='/watch/:game/:drawNumber' component={Watch} />
+      <Route path='/watch/:game/:date/:drawNumber' component={Watch} />
       <Route path='/results' component={Results}/>
     </Switch>
   </Router>

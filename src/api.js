@@ -52,6 +52,7 @@ module.exports = {
           query {
             draws ${filter} {
               id
+              updatedAt
               drawNumber
               winningCards {
                 number

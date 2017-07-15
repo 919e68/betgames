@@ -108,7 +108,7 @@ export default class Results extends Component {
                             })
                           }
                           </td>
-                          <td><Link to={`/watch/${draw.game.name}/${draw.drawNumber}`} >Watch</Link></td>
+                          <td><Link to={`/watch/${draw.game.name}/${moment(draw.updatedAt).format('YYMMDD')}/${draw.drawNumber}`} >Watch</Link></td>
                         </tr>
                       )
                     })

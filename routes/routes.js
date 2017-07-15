@@ -8,7 +8,8 @@ let reactRoutes = [
   '/war',
   '/results',
   '/history',
-  '/watch/:game/:drawNumber'
+  '/watch/:game/:date/:drawNumber',
+
 ]
 
 for (let i = 0; i < reactRoutes.length; i++) {
