@@ -1,4 +1,8 @@
 import React, { Component } from 'react'
+import {
+  Link
+} from 'react-router-dom'
+
 import Translate from '../../../libs/translate'
 
 export default class Navbar extends Component {
@@ -22,12 +26,12 @@ export default class Navbar extends Component {
           <ul className="nav nav-pills">
 
             <li className="bets">
-              <a href="/bet-history">Bet History</a>
+              <Link to="/history">Bet History</Link>
               <span></span>
             </li>
 
             <li className="bets">
-              <a href="/results">Results</a>
+              <Link to="/results">Results</Link>
               <span></span>
             </li>
 

@@ -11,7 +11,7 @@ class GameMenu extends Component {
       <nav className='games-navigation'>
         <ul className='nav nav-pills lotteries-count-9'>
           <li className={`lottery-link-9 ${(this.props.activeGame == 'poker' ? 'active' : '')}`} title='Bet on Poker'>
-            <Link to='/bet-on-poker'>
+            <Link to='/poker'>
               <span className='lottery-name'>{Translate('Bet on Poker')}</span>
             </Link>
           </li>
@@ -23,7 +23,7 @@ class GameMenu extends Component {
           </li>
 
           <li className={`lottery-link-8 ${(this.props.activeGame == 'war' ? 'active' : '')}`} title='War of Bets'>
-            <Link to='/war-of-bets'>
+            <Link to='/war'>
               <span className='lottery-name'>{Translate('War of Bets')}</span>
             </Link>
           </li>
