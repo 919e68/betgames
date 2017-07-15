@@ -186,6 +186,39 @@ module.exports = {
         `
       })
     }
+  },
+
+  balance: {
+    get: (userId, drawNumber, outcomeId) => {
+      return axios.post('http://localhost:3000/graphql', {
+        query: `
+          query {
+            bettingBalance(drawNumber: "${drawNumber}", outcomeId: "${outcomeId}", userId: "${userId}") {
+              min
+              max
+            }
+          }
+        `
+      })
+    }
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

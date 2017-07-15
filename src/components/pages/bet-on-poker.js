@@ -62,7 +62,8 @@ class Poker extends Component {
         min: MIN_BET_PER_GAME,
         max: MAX_BET_PER_GAME
       },
-      recentBets: []
+      recentBets: [],
+      limitsHidden: true
     }
 
     this._onChange = this._onChange.bind(this)
@@ -271,7 +272,13 @@ class Poker extends Component {
                   winner: 'hand_1'
                 }
 
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 1).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
 
@@ -290,7 +297,13 @@ class Poker extends Component {
                   winner: 'hand_2'
                 }
 
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 2).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
             <BetOption 
@@ -308,7 +321,13 @@ class Poker extends Component {
                   winner: 'hand_3'
                 }
 
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 3).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
             <BetOption 
@@ -326,7 +345,13 @@ class Poker extends Component {
                   winner: 'hand_4'
                 }
 
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 4).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
             <BetOption 
@@ -344,7 +369,13 @@ class Poker extends Component {
                   winner: 'hand_5'
                 }
 
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 5).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
             <BetOption 
@@ -362,7 +393,13 @@ class Poker extends Component {
                   winner: 'hand_6'
                 }
 
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 6).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
             

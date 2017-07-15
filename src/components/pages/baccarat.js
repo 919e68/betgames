@@ -56,7 +56,8 @@ class Poker extends Component {
         min: MIN_BET_PER_GAME,
         max: MAX_BET_PER_GAME
       },
-      recentBets: []
+      recentBets: [],
+      limitsHidden: true
     }
 
     this._onChange = this._onChange.bind(this)
@@ -82,7 +83,7 @@ class Poker extends Component {
           return Api.users.bets(1, 2)
       }
     }).then( response => {
-      console.log(' CURRENT BETS', response)
+      // console.log(' CURRENT BETS', response)
       this.setState({ recentBets: [].concat(response.data.data.user.recentBets) }, () => {
         console.log('recent bets', this.state.recentBets)
       })
@@ -263,8 +264,13 @@ class Poker extends Component {
                   chosenOutcome: 'Player Wins',
                   winner: 'player'
                 }
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
 
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                Api.balance.get(1, self.state.drawNumber, 7).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
 
@@ -283,7 +289,13 @@ class Poker extends Component {
                   winner: 'banker'
                 }
 
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 8).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
 
@@ -302,7 +314,13 @@ class Poker extends Component {
                   winner: 'tie'
                 }
 
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 9).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
             
@@ -361,14 +379,20 @@ class Poker extends Component {
 
           <BetInput value={this.state.betInput} onChange={this._onChange} />
 
-          <p>
-            { 
-              this.state.limits.max > 0 ? <span>Min: ${this.state.limits.min.toFixed(2)} </span> : <span> Min: $0.00 </span>
-            }
-            {
-              <span>Max: ${this.state.limits.max.toFixed(2)} </span>
-            }
-          </p>
+          {
+            !this.state.limitsHidden ?
+            <p>
+              { 
+                this.state.limits.max > 0 ? <span>Min: ${this.state.limits.min.toFixed(2)} </span> : <span> Min: $0.00 </span>
+              }
+              {
+                <span>Max: ${this.state.limits.max.toFixed(2)} </span>
+              }
+            </p>
+            :
+            null
+          }
+
 
           {
             this.state.hasBet ?

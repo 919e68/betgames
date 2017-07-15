@@ -53,7 +53,8 @@ class WarOfBets extends Component {
         min: MIN_BET_PER_GAME,
         max: MAX_BET_PER_GAME
       },
-      recentBets: []
+      recentBets: [],
+      limitsHidden: true
     }
 
     this._onChange = this._onChange.bind(this)
@@ -94,11 +95,11 @@ class WarOfBets extends Component {
           return
         }
         
-        console.log(data)
+        // console.log(data)
 
         if(data.type == 'create') {
           // console.log(this.state)
-          this.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber})
+          this.setState({gamePartId: data.data.gamePartId, drawNumber: data.data.drawNumber, limitsHidden: true})
           this.setState({odds: Object.assign({}, data.data.odds)}, function(){
             // console.log(' ODDS' ,this.state.odds)
           })
@@ -246,7 +247,13 @@ class WarOfBets extends Component {
                   chosenOutcome: 'Dealer Wins',
                   winner: 'dealer'
                 }
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 10).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
             <BetOption 
@@ -263,7 +270,13 @@ class WarOfBets extends Component {
                   chosenOutcome: 'Player Wins',
                   winner: 'player'
                 }
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 11).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
             <BetOption 
@@ -280,7 +293,13 @@ class WarOfBets extends Component {
                   chosenOutcome: 'War',
                   winner: 'war'
                 }
-                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false})
+                self.setState({selectedOdds: Object.assign({}, bet), hasBet: false, limitsHidden: false})
+
+                Api.balance.get(1, self.state.drawNumber, 12).then(response => {
+                  console.log('BALANCE', response)
+                  self.setState({limits: Object.assign({}, response.data.data.bettingBalance)})
+                }).catch(err => {
+                })
               }}
             />
           </BetOptions>
@@ -338,14 +357,19 @@ class WarOfBets extends Component {
 
           <BetInput value={this.state.betInput} onChange={this._onChange} />
 
-          <p>
-            { 
-              this.state.limits.max > 0 ? <span>Min: ${this.state.limits.min.toFixed(2)} </span> : <span> Min: $0.00 </span>
-            }
-            {
-              <span>Max: ${this.state.limits.max.toFixed(2)} </span>
-            }
-          </p>
+          {
+            !this.state.limitsHidden ?
+            <p>
+              { 
+                this.state.limits.max > 0 ? <span>Min: ${this.state.limits.min.toFixed(2)} </span> : <span> Min: $0.00 </span>
+              }
+              {
+                <span>Max: ${this.state.limits.max.toFixed(2)} </span>
+              }
+            </p>
+            :
+            null
+          }
 
           {
             this.state.hasBet ?
@@ -369,3 +393,4 @@ class WarOfBets extends Component {
 }
 
 export default WarOfBets
+
