@@ -30,19 +30,27 @@ module.exports = {
         `
       })
     },
-    get: (gameId, drawNumber, date) => {
+    get: (gameId, drawNumber, date, page, limit) => {
       let filter = []
 
-      if(gameId) {
+      if (gameId) {
         filter.push(`gameId: ${gameId}`)
       }
 
-      if(drawNumber) {
+      if (drawNumber) {
         filter.push(`drawNumber: "${drawNumber}"`)
       }
 
-      if(date) {
+      if (date) {
         filter.push(`date: "${date}"`)
+      }
+
+      if (page) {
+        filter.push(`page: "${page}"`) 
+      }
+
+      if (limit) {
+        filter.push(`limit: "${limit}"`)
       }
 
       filter = filter.length ? `(${filter.join(', ')})` : ''
@@ -51,18 +59,31 @@ module.exports = {
         query: `
           query {
             draws ${filter} {
-              id
-              updatedAt
-              drawNumber
-              createdAt
-              winningCards {
-                number
-                rank
-                symbol
+              data {
+                id
+                updatedAt
+                drawNumber
+                createdAt
+                winningCards {
+                  number
+                  rank
+                  symbol
+                }
+                winnerFormatted
+                game {
+                  name
+                }
               }
-              winnerFormatted
-              game {
-                name
+              errors {
+                key
+                msg
+              }
+              pagination {
+                page
+                pageCount
+                count
+                prev
+                next
               }
             }
           }
