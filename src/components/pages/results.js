@@ -28,7 +28,7 @@ export default class Results extends Component {
   componentWillMount() {
     Api.draws.get().then(response => {
       console.log(response)
-      this.setState({draws: [].concat(response.data.data.draws)})
+      this.setState({draws: [].concat(response.data.data.draws.data)})
     })
   }
 
@@ -41,7 +41,9 @@ export default class Results extends Component {
 
     Api.draws.get(gameId, drawNumber, date).then(response => {
       console.log(response)
-      this.setState({draws: [].concat(response.data.data.draws)})
+      this.setState({draws: [].concat(response.data.data.draws.data)})
+    }).catch(err => {
+      console.log(err)
     })
 
   }
@@ -51,7 +53,6 @@ export default class Results extends Component {
   }
 
   render() {
-
     return (
       <div>
         <Navbar />
@@ -61,6 +62,7 @@ export default class Results extends Component {
           <section className="filter" style={{paddingTop: 40, paddingBottom: 20}}>
             <form className="form-inline" onSubmit={this.handleSubmit} style={{paddingBottom:20}}>
               <DatePicker ref="date" value={this.state.date} onChange={(e) => {
+                console.log(e)
                 this.setState({date: moment(e).format('YYYY-MM-DD')})
               }} />
               <div className="form-group">
@@ -117,6 +119,16 @@ export default class Results extends Component {
                   }
                 </tbody>
             </table>
+          </div>
+
+          <div style={{textAlign: 'center'}}>
+            <ul className="pagination">
+              <li><a href="#">1</a></li>
+              <li className="active"><a href="#">2</a></li>
+              <li><a href="#">3</a></li>
+              <li><a href="#">4</a></li>
+              <li><a href="#">5</a></li>
+            </ul>
           </div>
         </div>
 
