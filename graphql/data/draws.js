@@ -136,8 +136,8 @@ module.exports = {
           where: {
             drawNumber: drawNumber
           }
-         }).then(draw => {
-          resolve(draw)
+         }).then(data => {
+          resolve({ data })
          }).catch(err => {
           reject(err)
          })

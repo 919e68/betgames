@@ -89,6 +89,31 @@ module.exports = {
           }
         `
       })
+    },
+    getOne: (drawNumber) => {
+      return axios.post('http://localhost:3000/graphql', {
+        query: `
+          query {
+            draw (drawNumber: "${drawNumber}") {
+              data {
+                id
+                updatedAt
+                drawNumber
+                createdAt
+                winningCards {
+                  number
+                  rank
+                  symbol
+                }
+                winnerFormatted
+                game {
+                  name
+                }
+              }
+            }
+          }
+        `
+      })
     }
   },
 
