@@ -44,7 +44,8 @@ module.exports = {
 
           if (date) {
             where.updatedAt = {
-              $eq: date,
+              $gte: moment(date).startOf('day'),
+              $lte: moment(date).endOf('day')
             }
           }
 

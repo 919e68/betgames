@@ -30,7 +30,7 @@ module.exports = {
         `
       })
     },
-    get: (gameId, drawNumber) => {
+    get: (gameId, drawNumber, date) => {
       let filter = []
 
       if(gameId) {
@@ -39,6 +39,10 @@ module.exports = {
 
       if(drawNumber) {
         filter.push(`drawNumber: "${drawNumber}"`)
+      }
+
+      if(date) {
+        filter.push(`date: "${date}"`)
       }
 
       filter = filter.length ? `(${filter.join(', ')})` : ''

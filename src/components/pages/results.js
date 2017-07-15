@@ -17,7 +17,8 @@ export default class Results extends Component {
 
     this.state = {
       draws: [],
-      game: 0
+      game: 0,
+      date: moment().format('YYYY-MM-DD')
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -34,11 +35,11 @@ export default class Results extends Component {
   handleSubmit(e) {
     e.preventDefault()
     
-    let date = moment(this.refs.date.getValue()).format('YYYY-MM-DD')
+    let date = this.refs.date.getValue() ? moment(this.refs.date.getValue()).format('YYYY-MM-DD') : null
     let gameId = this.state.game
     let drawNumber = this.refs.drawNumber.value
 
-    Api.draws.get(gameId, drawNumber).then(response => {
+    Api.draws.get(gameId, drawNumber, date).then(response => {
       console.log(response)
       this.setState({draws: [].concat(response.data.data.draws)})
     })
@@ -59,7 +60,9 @@ export default class Results extends Component {
         <div className="container">
           <section className="filter" style={{paddingTop: 20, paddingBottom: 20}}>
             <form className="form-inline" onSubmit={this.handleSubmit}>
-              <DatePicker ref="date" />
+              <DatePicker ref="date" value={this.state.date} onChange={(e) => {
+                this.setState({date: moment(e).format('YYYY-MM-DD')})
+              }} />
               <div className="form-group">
                 <select id="current_game" className="form-control" value={this.state.game} onChange={this.handleChange}>
                   <option value="0">All games</option>
