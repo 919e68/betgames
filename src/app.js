@@ -18,10 +18,10 @@ ReactDOM.render((
   <Router>
     <Switch>
       <Route exact path='/' component={Main} />
-      <Route path='/bet-on-poker' component={BetOnPoker}/>
+      <Route path='/poker' component={BetOnPoker}/>
       <Route path='/baccarat' component={Baccarat}/>
-      <Route path='/war-of-bets' component={WarOfBets}/>
-      <Route path='/bet-history' component={BetHistory}/>
+      <Route path='/war' component={WarOfBets}/>
+      <Route path='/history' component={BetHistory}/>
       <Route path='/watch/:game/:drawNumber' component={Watch} />
       <Route path='/results' component={Results}/>
     </Switch>
