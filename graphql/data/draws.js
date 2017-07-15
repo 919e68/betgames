@@ -115,7 +115,7 @@ module.exports = {
         })
       }
     },
-    draws: {
+    draw: {
       type: new GraphQLObjectType({
         name: 'DrawResponse',
         fields: () => ({
