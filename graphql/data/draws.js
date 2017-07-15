@@ -115,6 +115,35 @@ module.exports = {
         })
       }
     },
+    draw: {
+      type: new GraphQLObjectType({
+        name: 'DrawResponse',
+        fields: () => ({
+          data: {
+            type: Draw.Type
+          }
+        })
+      }),
+      args: {
+        drawNumber: {
+          name: 'drawNumber',
+          type: GraphQLString
+        }
+      },
+      resolve: (root, { drawNumber }) => {
+        return new Promise((resolve, reject) => {
+         db.Draw.findOne({
+          where: {
+            drawNumber: drawNumber
+          }
+         }).then(draw => {
+          resolve(draw)
+         }).catch(err => {
+          reject(err)
+         })
+        })
+      }
+    },
     latestDraw: {
       type: new GraphQLObjectType({
         name: 'LatestDrawResponse',

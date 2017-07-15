@@ -21,7 +21,8 @@ module.exports = new GraphQLSchema({
       bettingBalance: bets.Query.bettingBalance,
 
       odds: odds.Query.odds,
-      draws: draws.Query.draws
+      draws: draws.Query.draws,
+      draw: draws.Query.draw
     }
   }),
 
