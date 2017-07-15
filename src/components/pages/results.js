@@ -18,7 +18,9 @@ export default class Results extends Component {
     this.state = {
       draws: [],
       game: 0,
-      date: moment().format('YYYY-MM-DD')
+      date: moment().format('YYYY-MM-DD'),
+      pagination: {},
+      max: 5
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -27,8 +29,10 @@ export default class Results extends Component {
 
   componentWillMount() {
     Api.draws.get().then(response => {
-      console.log(response)
-      this.setState({draws: [].concat(response.data.data.draws.data)})
+      this.setState({
+        draws: [].concat(response.data.data.draws.data),
+        pagination: Object.assign({}, response.data.data.draws.pagination) 
+      })
     })
   }
 
@@ -40,8 +44,11 @@ export default class Results extends Component {
     let drawNumber = this.refs.drawNumber.value
 
     Api.draws.get(gameId, drawNumber, date).then(response => {
-      console.log(response)
-      this.setState({draws: [].concat(response.data.data.draws.data)})
+      console.log(response.data.data.draws)
+      this.setState({
+        draws: [].concat(response.data.data.draws.data), 
+        pagination: Object.assign({}, response.data.data.draws.pagination) 
+      })
     }).catch(err => {
       console.log(err)
     })
@@ -52,7 +59,42 @@ export default class Results extends Component {
     this.setState({game: e.target.value})
   }
 
+  onClick(i) {
+    let date = this.refs.date.getValue() ? moment(this.refs.date.getValue()).format('YYYY-MM-DD') : null
+    let gameId = this.state.game
+    let drawNumber = this.refs.drawNumber.value
+
+    Api.draws.get(gameId, drawNumber, date, i).then(response => {
+      console.log(response.data.data.draws)
+      this.setState({
+        draws: [].concat(response.data.data.draws.data), 
+        pagination: Object.assign({}, response.data.data.draws.pagination) 
+      })
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
   render() {
+    let page = this.state.pagination.page
+    let max = this.state.max
+
+    let start = (Math.ceil(page / max) - 1) * max + 1
+    let end = start + max
+
+    console.log(start, end)
+
+    let links = []
+    for(let i = start; i < end; i++) {
+      if (i <= this.state.pagination.pageCount) {
+        links.push(
+          <li key={i} className={i == page ? 'active': ''}>
+            <a href="javascript:void(0)" onClick={this.onClick.bind(this, i)}>{i}</a>
+          </li>  
+        )
+      }
+    }
+
     return (
       <div>
         <Navbar />
@@ -121,13 +163,15 @@ export default class Results extends Component {
             </table>
           </div>
 
+          { JSON.stringify(this.state.pagination) }
+
           <div style={{textAlign: 'center'}}>
             <ul className="pagination">
-              <li><a href="#">1</a></li>
-              <li className="active"><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#">4</a></li>
-              <li><a href="#">5</a></li>
+              <li className={this.state.pagination.prev ? '' : 'disabled'}><a href="javascript:void(0)" onClick={this.onClick.bind(this, 1)}>&lt;&lt;</a></li>
+              <li className={this.state.pagination.prev ? '' : 'disabled'}><a href="javascript:void(0)" onClick={this.onClick.bind(this, this.state.pagination.page - 1)}>&lt;</a></li>
+              { links }
+              <li className={this.state.pagination.next ? '' : 'disabled'}><a href="javascript:void(0)" onClick={this.onClick.bind(this, this.state.pagination.page + 1)}>&gt;</a></li>
+              <li className={this.state.pagination.next ? '' : 'disabled'}><a href="javascript:void(0)" onClick={this.onClick.bind(this, this.state.pagination.pageCount)}>&gt;&gt;</a></li>
             </ul>
           </div>
         </div>

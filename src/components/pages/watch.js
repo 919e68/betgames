@@ -12,20 +12,27 @@ export default class Watch extends Component {
 
   constructor(props) {
     super(props)
+
+    this.state = {
+      draw: {}
+    }
   }
 
   componentWillMount() {
+    
+    Api.draws.get(null, this.props.match.params.drawNumber).then(response => {
+      this.setState({ draw: Object.assign({}, response.data.data.draws.data[0]) })
+    })
   }
 
   render() {
-    console.log(this)
     let game = ''
     switch(this.props.match.params.game.toLowerCase()) {
       case 'war of bets':
         game = 'war'
         break
       case 'baccarat':
-        game = 'baccarrat'
+        game = 'baccarat'
         break
       case 'bet on poker':
         game = 'poker'

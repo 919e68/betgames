@@ -46,11 +46,11 @@ module.exports = {
       }
 
       if (page) {
-        filter.push(`page: "${page}"`) 
+        filter.push(`page: ${page}`) 
       }
 
       if (limit) {
-        filter.push(`limit: "${limit}"`)
+        filter.push(`limit: ${limit}`)
       }
 
       filter = filter.length ? `(${filter.join(', ')})` : ''
