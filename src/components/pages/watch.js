@@ -56,12 +56,12 @@ export default class Watch extends Component {
         <Navbar />
         <GameMenu />
         <div className="container" style={{paddingTop: 40, textAlign: 'center'}}>
-          <p>Draw Number: {this.state.draw.drawNumber}</p>
-          <p>{moment(this.state.draw.createdAt).format('YYYY-MM-DD') } 00:00 - {moment(this.state.draw.createdAt).add('days', 1).format('YYYY-MM-DD')} 00:00 </p> 
-          <p>Winner: {this.state.draw.winnerFormatted} ( { this.renderWinningCards() } )</p>
+          <h4>{this.state.draw.drawNumber}</h4>
+          <p>{moment(this.state.draw.createdAt).format('YYYY-MM-DD') } </p> 
+          <p>{this.state.draw.winnerFormatted} ( { this.renderWinningCards() } )</p>
 
           <br/>
-          <div style={{position: 'relative'}}>
+          <div style={{position: 'relative', height: 576}}>
 
             <Waiting />
             <video src={`https://video.betgames.tv/stream${game}/${this.props.match.params.date}/${this.props.match.params.drawNumber}.mp4`} className="fp-engine " autoPlay="true" preload="true" style={{position: 'relative', zIndex: 1, width: '100%', maxWidth: 1024, maxHeight: 576}} ></video>

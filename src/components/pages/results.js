@@ -163,8 +163,6 @@ export default class Results extends Component {
             </table>
           </div>
 
-          { JSON.stringify(this.state.pagination) }
-
           <div style={{textAlign: 'center'}}>
             <ul className="pagination">
               <li className={this.state.pagination.prev ? '' : 'disabled'}><a href="javascript:void(0)" onClick={this.onClick.bind(this, 1)}>&lt;&lt;</a></li>
